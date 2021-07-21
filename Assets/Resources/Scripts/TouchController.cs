@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class TouchController : MonoBehaviour
 {
+
+    [SerializeField] private BuildingsGrid _buildingsGrid;
+    [SerializeField] private RectTransform _btnsUnitsTypes;
+    [SerializeField] private ButtonsState _buttonsState;
+
     void FixedUpdate()
     {
        
@@ -16,15 +21,29 @@ public class TouchController : MonoBehaviour
         
     }
 
+
     private void CheckTouch(Vector3 pos)
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 100.0f))
+
+        if (_buildingsGrid._flyingBuilding != null)
         {
-            if (hit.collider.GetComponent(typeof(IBuilding)))
+            _buildingsGrid.ClickPlacingBuilding();
+        }
+        else
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100.0f))
             {
-                hit.collider.GetComponent<IBuilding>().UsingBuilding();
+                if (hit.collider.GetComponent(typeof(IBuilding)))
+                {
+                    hit.collider.GetComponent<IBuilding>().UsingBuilding();
+                } 
+                else if (hit.collider.GetComponent(typeof(IUnit)))
+                {
+                    IUnit unit = hit.collider.GetComponent<IUnit>();
+                    _buttonsState.OpenCategory(_btnsUnitsTypes, unit);
+                }
             }
         }
     }

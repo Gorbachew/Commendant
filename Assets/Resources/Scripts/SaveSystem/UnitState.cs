@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UnitState : MonoBehaviour
 {
-    public GameObject obj;
+    public GameObject model;
     public int id;
     public string type;
     public int hp;
@@ -10,6 +10,6 @@ public class UnitState : MonoBehaviour
 
     private void Awake()
     {
-        obj = transform.Find("Object").gameObject;
+        model = transform.Find("Model").gameObject;
     }
 }

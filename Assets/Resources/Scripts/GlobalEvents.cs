@@ -44,12 +44,12 @@ public class GlobalEvents : MonoBehaviour
                 UnitState unit = FindUnits(ud._units[i]._id);
                 if (unit)
                 {
-                    EnrichmentUnit(ud._units[i], unit);
+                    unit.GetComponent<IUnit>().Enrichment(ud._units[i]);
                 } else
                 {
                     string name = OperationsHelper.CloneClearing(ud._units[i]._type);
-                    GameObject obj = Instantiate(Resources.Load("Prefabs/Units/" + name), _unitsFolder) as GameObject;
-                    EnrichmentUnit(ud._units[i], obj.GetComponent<UnitState>());
+                    GameObject obj = Instantiate(Resources.Load("Prefabs/Units/Citizen"), _unitsFolder) as GameObject;
+                    obj.GetComponent<IUnit>().Enrichment(ud._units[i]);
                 }
                 
             }
@@ -74,31 +74,7 @@ public class GlobalEvents : MonoBehaviour
         
     }
 
-    private static void EnrichmentUnit(Unit unit, UnitState unitState)
-    {
-        unitState.id = unit._id;
-        unitState.hp = unit._hp;
-        unitState.level = unit._level;
-        unitState.transform.position = new Vector3(
-                unit._pos._x,
-                unit._pos._y,
-                unit._pos._z
-            );
-        Transform obj = unitState.transform.Find("Object");
-        obj.transform.localPosition = new Vector3(
-                unit._posObj._x,
-                unit._posObj._y,
-                unit._posObj._z
-            );
-
-        obj.transform.localRotation = Quaternion.Euler(
-                unit._rotObj._x,
-                unit._rotObj._y,
-                unit._rotObj._z
-            );
-    }
-
-    private void EnrichmentBuild(Build build, BuildingState buildState)
+    private void EnrichmentBuild(SBuild build, BuildingState buildState)
     {
         buildState.id = build._id;
         buildState.hp = build._hp;

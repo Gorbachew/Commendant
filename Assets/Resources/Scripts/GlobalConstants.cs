@@ -2,6 +2,9 @@
 
 public static class GlobalConstants
 {
+
+    public static int placeSize = 50;
+
     public static int gardenBedSpeed = 10;
     public static int gardenBedMaxItems = 1;
 

@@ -4,14 +4,15 @@ using UnityEngine.UI;
 
 public class BuildingsGrid : MonoBehaviour
 {
-    public Vector2Int _gridSize = new Vector2Int(10, 10);
-    private GameObject[,] _gridPlanes = new GameObject[10, 10];
+
     public Transform _buildingsFolder;
+    public Building _flyingBuilding;
 
     [SerializeField] private Button[] _btnsControl = new Button[3];
+    private Vector2Int _gridSize = new Vector2Int(GlobalConstants.placeSize, GlobalConstants.placeSize);
+    private GameObject[,] _gridPlanes = new GameObject[GlobalConstants.placeSize, GlobalConstants.placeSize];
     private int _maxId = 0;
     private Building[,] _grid;
-    private Building _flyingBuilding;
     private Camera _mainCamera;
     private Material _green, _red;
 
@@ -57,7 +58,7 @@ public class BuildingsGrid : MonoBehaviour
         StartCoroutine(FindEmployedCells(true));
     }
 
-    private void Update()
+    public void ClickPlacingBuilding()
     {
         if (_flyingBuilding != null)
         {
@@ -82,7 +83,13 @@ public class BuildingsGrid : MonoBehaviour
         }
     }
 
-   
+    public void CancelFlyingBuilding()
+    {
+        StartCoroutine(FindEmployedCells(false));
+        ChangeBtnsControll(false);
+        Destroy(_flyingBuilding.gameObject);
+        _flyingBuilding = null;
+    }
 
     private void FlyingBuilding(Ray ray, float position)
     {
@@ -127,15 +134,6 @@ public class BuildingsGrid : MonoBehaviour
         obj.localPosition = new Vector3(obj.localPosition.z, obj.localPosition.y, obj.localPosition.x);
         StartCoroutine(FindEmployedCells(true));
     }
-
-    private void CancelFlyingBuilding()
-    {  
-        StartCoroutine(FindEmployedCells(false));
-        ChangeBtnsControll(false);
-        Destroy(_flyingBuilding.gameObject);
-        _flyingBuilding = null;
-    }
-
 
     private bool IsPlaceTaken(int placeX, int placeY)
     {

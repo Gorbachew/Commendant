@@ -3,20 +3,26 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    float speed = 3;
-    Transform transUnit;
-    Animator anim;
+    float _speed = 3;
+    [SerializeField] Transform _transUnit;
+    [SerializeField] Animator _anim;
 
-    private void Start()
+    private void Awake()
     {
-        transUnit = gameObject.transform.Find("Object");
-        anim = transUnit.GetComponent<Animator>();
+        _transUnit = gameObject.transform.Find("Model");
+        _anim = _transUnit.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Movement();
+    }
+
+    public void UpdateModel(GameObject model)
+    {
+        _transUnit = model.transform;
+        _anim = model.GetComponent<Animator>();
     }
 
     private void Movement()
@@ -26,16 +32,16 @@ public class PlayerController : MonoBehaviour
 
         Vector3 pos = transform.position;
 
-        pos.z += moveVer * speed * Time.deltaTime;
-        pos.x += moveHor * speed * Time.deltaTime;
+        pos.z += moveVer * _speed * Time.deltaTime;
+        pos.x += moveHor * _speed * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
-            transUnit.rotation = Quaternion.LookRotation(new Vector3(moveHor, 0, moveVer));
-            anim.SetBool("Run", true);
+            _transUnit.rotation = Quaternion.LookRotation(new Vector3(moveHor, 0, moveVer));
+            _anim.SetBool("Run", true);
         } else
         {
-            anim.SetBool("Run", false);
+            _anim.SetBool("Run", false);
         }
 
         pos = transform.position.x < 0.1f
