@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Mill : MonoBehaviour, IBuilding
+public class Mill : MonoBehaviour
 {
     private Animator _animator;
     private BuildingState _buildingState;

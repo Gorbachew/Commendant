@@ -20,7 +20,10 @@ public class BuildingsData
             _builds[i]._hp = build[i].hp;
             _builds[i]._type = build[i].type;
             _builds[i]._level = build[i].level;
-            _builds[i]._items = build[i].items;
+            _builds[i]._items = build[i].items.ToArray();
+
+            _builds[i]._isBouild = build[i].isBuild;
+            _builds[i]._isWork = build[i].isWork;
 
             _builds[i]._pos = new SVec3(
                 build[i].transform.position.x,
@@ -28,14 +31,14 @@ public class BuildingsData
                 build[i].transform.position.z
                 );
             _builds[i]._posObj = new SVec3(
-                build[i].obj.transform.localPosition.x,
-                build[i].obj.transform.localPosition.y,
-                build[i].obj.transform.localPosition.z
+                build[i].model.transform.localPosition.x,
+                build[i].model.transform.localPosition.y,
+                build[i].model.transform.localPosition.z
                 );
             _builds[i]._rotObj = new SVec3(
-                build[i].obj.transform.eulerAngles.x,
-                build[i].obj.transform.eulerAngles.y,
-                build[i].obj.transform.eulerAngles.z
+                build[i].model.transform.eulerAngles.x,
+                build[i].model.transform.eulerAngles.y,
+                build[i].model.transform.eulerAngles.z
                 );
 
         }

@@ -1,6 +1,10 @@
 
 
-interface IBuilding
+using static MainData;
+
+public interface IBuilding
 {
-    void UsingBuilding();
+    void ChangeItems();
+
+    void AddItems(int id, int count);
 }

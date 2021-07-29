@@ -1,7 +1,7 @@
 using UnityEngine;
 using static MainData;
 
-public class Unit : MonoBehaviour, IUnit
+public class Unit : MonoBehaviour
 {
     [SerializeField] PlayerController _playerController;
     private UnitState _unitState;

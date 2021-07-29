@@ -39,17 +39,15 @@ public class Peasant : MonoBehaviour
             } else
             {
                 Moving();
-            }
-                
+            } 
         }
-        
     }
 
     private void Using()
     {
-        if (target.GetComponent(typeof(IBuilding)))
+        if (target.GetComponent(typeof(Building)))
         {
-            target.GetComponent<IBuilding>().UsingBuilding();
+            //target.GetComponent<Building>().UsingBuilding();
         }
     }
 

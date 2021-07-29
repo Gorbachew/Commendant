@@ -193,7 +193,6 @@ GameObject:
   - component: {fileID: 5112500510702704732}
   - component: {fileID: 2169647103595399766}
   - component: {fileID: -1704010366994951780}
-  - component: {fileID: 5155510125269827790}
   - component: {fileID: 669975611806434220}
   - component: {fileID: 1785496551112363802}
   - component: {fileID: 3204572517269851195}
@@ -248,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03df76bbba921c84a8d642f0833fc5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 0}
+  model: {fileID: 0}
   type: GardenBed
   isBuild: 0
   isWork: 0
@@ -256,18 +255,6 @@ MonoBehaviour:
   hp: 0
   level: 0
   items: 0
---- !u!114 &5155510125269827790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2000272051338848788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f174780906314d46990018362d4ab86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &669975611806434220
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -324,7 +311,7 @@ GameObject:
   - component: {fileID: 5471208711528868938}
   - component: {fileID: 7594506997917060886}
   m_Layer: 0
-  m_Name: Object
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

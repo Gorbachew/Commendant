@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1063163853179197563}
   - component: {fileID: 3811080520570968741}
   m_Layer: 0
-  m_Name: Object
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainRenderers: []
-  isBuild: 0
   Size: {x: 1, y: 1}
 --- !u!114 &6590508422188739698
 MonoBehaviour:
@@ -157,7 +156,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 0}
-  id: 0
   type: Tower
+  isBuild: 0
+  isWork: 0
+  id: 0
   hp: 0
   level: 0
+  items: 0

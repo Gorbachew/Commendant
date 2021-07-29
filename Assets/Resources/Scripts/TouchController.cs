@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TouchController : MonoBehaviour
 {
@@ -24,32 +26,33 @@ public class TouchController : MonoBehaviour
 
     private void CheckTouch(Vector3 pos)
     {
-
-        if (_buildingsGrid._flyingBuilding != null)
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 100.0f))
         {
-            _buildingsGrid.ClickPlacingBuilding();
-        }
-        else
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 100.0f))
+            if (!EventSystem.current.IsPointerOverGameObject())
             {
-                if (hit.collider.GetComponent(typeof(IBuilding)))
+                if (_buildingsGrid._flyingBuilding != null)
                 {
-                    hit.collider.GetComponent<IBuilding>().UsingBuilding();
-                } 
-                else if (hit.collider.GetComponent(typeof(IUnit)))
+                    _buildingsGrid.ClickPlacingBuilding();
+                } else
                 {
-                    IUnit unit = hit.collider.GetComponent<IUnit>();
-                    _buttonsState.OpenCategory(_btnsUnitsTypes, unit);
+                    if (hit.collider.GetComponent(typeof(Building)))
+                    {
+                        hit.collider.GetComponent<Building>().AddItems(GlobalConstants.woodId, 1);
+                    }
+                    else if (hit.collider.GetComponent(typeof(Unit)))
+                    {
+                        Unit unit = hit.collider.GetComponent<Unit>();
+                        _buttonsState.OpenCategory(_btnsUnitsTypes, unit);
+                    }
                 }
             }
         }
     }
 
+ 
 
 
 
-    
 }

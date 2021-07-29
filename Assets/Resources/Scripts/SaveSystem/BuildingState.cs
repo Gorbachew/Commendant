@@ -1,9 +1,9 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingState : MonoBehaviour
 {
-    public GameObject obj;
+    public GameObject model;
     public string type;
 
     public bool isBuild;
@@ -12,11 +12,10 @@ public class BuildingState : MonoBehaviour
     public int id;
     public int hp;
     public int level;
-    public int items;
-
+    public List<int> items = new List<int>();
 
     private void Awake()
     {
-        obj = transform.Find("Object").gameObject;
+        model = transform.Find("Model").gameObject;
     }
 }

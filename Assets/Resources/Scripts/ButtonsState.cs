@@ -7,7 +7,7 @@ public class ButtonsState : MonoBehaviour
     [SerializeField] private BuildingsGrid _buildingsGrid;
 
     private RectTransform _openedCategory;
-    private IUnit _unit;
+    private Unit _unit;
     private bool _btnsOpened;
 
     private void Start()
@@ -21,7 +21,7 @@ public class ButtonsState : MonoBehaviour
         StartCoroutine(Transformation(category, new Vector2(0, 0)));
     }
 
-    public void OpenCategory(RectTransform category, IUnit unit)
+    public void OpenCategory(RectTransform category, Unit unit)
     {
         _unit = unit;
         _openedCategory = category;
@@ -46,6 +46,7 @@ public class ButtonsState : MonoBehaviour
     public void ChangeUnitType(string type)
     {
         _unit.ChangeType(type);
+        RollUpCategory();
     }
 
     IEnumerator Transformation(RectTransform category, Vector2 to)

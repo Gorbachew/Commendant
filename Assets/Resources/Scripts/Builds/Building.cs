@@ -1,37 +1,32 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
+using static MainData;
 
 public class Building : MonoBehaviour
 {
     public Renderer[] MainRenderers;
     private Material[] OriginalRenderers;
-    private Material _green, _red;
     private BuildingState _buildingState;
+    private IBuilding _ibuilding;
     public Vector2Int Size = Vector2Int.one;
 
     private void Awake()
     {
         _buildingState = GetComponent<BuildingState>();
+        _ibuilding = GetComponent<IBuilding>();
         OriginalRenderers = new Material[MainRenderers.Length];
         for (int i = 0; i < MainRenderers.Length; i++)
         {
             OriginalRenderers[i] = MainRenderers[i].material;
         }
-        _green = Resources.Load("Materials/Green") as Material;
-        _red = Resources.Load("Materials/Red") as Material;
     }
 
-    public void SetTransparent(bool available)
+    private void Start()
     {
-        if (available)
+        if (_ibuilding != null)
         {
-            foreach ( Renderer rend in MainRenderers )
-                rend.material = _green;
-        }
-        else
-        {
-            foreach (Renderer rend in MainRenderers)
-                rend.material = _red;
+            _ibuilding.ChangeItems();
         }
     }
 
@@ -42,6 +37,35 @@ public class Building : MonoBehaviour
             MainRenderers[i].material = OriginalRenderers[i];
         }
         StartCoroutine(BuildDelay());
+    }
+
+    public void Enrichment(SBuild build)
+    {
+        _buildingState.id = build._id;
+        _buildingState.hp = build._hp;
+        _buildingState.level = build._level;
+        _buildingState.items = build._items.ToList<int>();
+
+        _buildingState.isBuild = build._isBouild;
+        _buildingState.isWork = build._isWork;
+
+        _buildingState.transform.position = new Vector3(
+                build._pos._x,
+                build._pos._y,
+                build._pos._z
+            );
+        Transform obj = _buildingState.transform.Find("Model");
+        obj.transform.localPosition = new Vector3(
+                build._posObj._x,
+                build._posObj._y,
+                build._posObj._z
+            );
+
+        obj.transform.localRotation = Quaternion.Euler(
+                build._rotObj._x,
+                build._rotObj._y,
+                build._rotObj._z
+            );
     }
 
     private void OnDrawGizmos()
@@ -62,5 +86,10 @@ public class Building : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         _buildingState.isBuild = true;
+    }
+
+    public void AddItems(int id, int count)
+    {
+        _ibuilding.AddItems(id, count);
     }
 }

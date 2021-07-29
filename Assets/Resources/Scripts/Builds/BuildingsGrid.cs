@@ -52,7 +52,7 @@ public class BuildingsGrid : MonoBehaviour
             Destroy(_flyingBuilding.gameObject);
         }
  
-        _flyingBuilding = Instantiate(buildingPrefab, new Vector3(-10, -10, -10), Quaternion.identity, _buildingsFolder);
+        _flyingBuilding = Instantiate(buildingPrefab, new Vector3(-10, -10, -10), Quaternion.identity);
 
         ChangeBtnsControll(true);
         StartCoroutine(FindEmployedCells(true));
@@ -107,7 +107,6 @@ public class BuildingsGrid : MonoBehaviour
         if (available)
         {
             _flyingBuilding.transform.position = new Vector3(x, 0, y);
-            _flyingBuilding.SetTransparent(available);
             StartCoroutine(FindEmployedCells(true));
         }
         
@@ -118,6 +117,7 @@ public class BuildingsGrid : MonoBehaviour
     {
         StartCoroutine(FindEmployedCells(false));
         ChangeBtnsControll(false);
+        _flyingBuilding.transform.SetParent(_buildingsFolder);
 
         _flyingBuilding.SetNormal();
         _maxId++;
@@ -129,7 +129,7 @@ public class BuildingsGrid : MonoBehaviour
     {
         _flyingBuilding.transform.position = new Vector3(-10, -10, -10);
         _flyingBuilding.Size = new Vector2Int(_flyingBuilding.Size.y, _flyingBuilding.Size.x);
-        Transform obj = _flyingBuilding.transform.Find("Object");
+        Transform obj = _flyingBuilding.transform.Find("Model");
         obj.Rotate(0, 90, 0);
         obj.localPosition = new Vector3(obj.localPosition.z, obj.localPosition.y, obj.localPosition.x);
         StartCoroutine(FindEmployedCells(true));
@@ -172,11 +172,14 @@ public class BuildingsGrid : MonoBehaviour
             {
                 if (Physics.Raycast(new Vector3Int(x, -5, y), new Vector3(0, 10, 0), out RaycastHit hit))
                 {
-                    Building building = hit.collider.GetComponentInParent<Building>(); 
+                    Building building = hit.collider.GetComponentInParent<Building>();
                     if (building)
                     {
-                        _grid[x, y] = hit.collider.GetComponentInParent<Building>();
-                        _gridPlanes[x, y].GetComponent<MeshRenderer>().material = _red;
+                        if (hit.collider.GetComponentInParent<BuildingState>().isBuild)
+                        {
+                            _grid[x, y] = hit.collider.GetComponentInParent<Building>();
+                            _gridPlanes[x, y].GetComponent<MeshRenderer>().material = _red;
+                        }
                     }
                 }
             }

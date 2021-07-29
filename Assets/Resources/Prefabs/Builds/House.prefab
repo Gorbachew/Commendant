@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainRenderers: []
-  isBuild: 0
   Size: {x: 2, y: 1}
 --- !u!114 &3956260650948563260
 MonoBehaviour:
@@ -61,10 +60,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 0}
-  id: 0
   type: House
+  isBuild: 0
+  isWork: 0
+  id: 0
   hp: 0
   level: 0
+  items: 0
 --- !u!1 &7089452946117478927
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +80,7 @@ GameObject:
   - component: {fileID: 8978817041054582880}
   - component: {fileID: 5096274775820159678}
   m_Layer: 0
-  m_Name: Object
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

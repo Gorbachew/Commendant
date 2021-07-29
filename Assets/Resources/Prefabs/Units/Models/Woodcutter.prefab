@@ -650,6 +650,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2956646210689651535}
   - component: {fileID: 8572407055946233298}
+  - component: {fileID: 680096746521445407}
+  - component: {fileID: -8980199844417092467}
   m_Layer: 0
   m_Name: Woodcutter
   m_TagString: Untagged
@@ -701,6 +703,34 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &680096746521445407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2469044331069639157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a5539514c4a2b4d952b702daa0f0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _trees: []
+  _drovnitsy: []
+  _target: {fileID: 0}
+  _unitsEvents: {fileID: 0}
+--- !u!114 &-8980199844417092467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2469044331069639157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02638228f9269940b019ee62bf12fca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2539173309330807875
 GameObject:
   m_ObjectHideFlags: 0

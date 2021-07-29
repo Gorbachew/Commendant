@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GardenBed : MonoBehaviour, IBuilding
+public class GardenBed : MonoBehaviour
 {
     private BuildingState _buildingState;
     private Transform _hayField;
