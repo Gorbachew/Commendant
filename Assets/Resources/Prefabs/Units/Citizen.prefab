@@ -101,7 +101,9 @@ MonoBehaviour:
   id: 2
   type: Citizen
   hp: 0
+  sp: 0
   level: 0
+  state: 
   items: 
 --- !u!114 &2091056055
 MonoBehaviour:

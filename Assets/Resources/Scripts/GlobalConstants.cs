@@ -1,42 +1,51 @@
 
 
-public static class GlobalConstants
+public class GlobalConstants
 {
 
-    public static int placeSize = 50;
-
-    public static int gardenBedSpeed = 10;
-    public static int gardenBedMaxItems = 1;
-
-    public static int millSpeed = 5;
-    public static int millMaxItems = 10;
+    public const int placeSizeX = 50;
+    public const int placeSizeY = 50;
 
 
-    public static int maxFindDistance = 30;
-    public static float stopDistance = 1.5f;
+    public const int gardenBedSpeed = 10;
+    public const int gardenBedMaxItems = 1;
+
+    public const int millSpeed = 5;
+    public const int millMaxItems = 10;
+
+
+    public const int maxFindDistance = 30;
+    public const float stopDistance = 1.5f;
 
     //Items Id
-    public static int woodId = 1;
-    public static int stoneId = 2;
-    public static int oreId = 3;
-    public static int goldId = 4;
-    public static int toolsId = 5;
-    public static int armorId = 6;
-    public static int weaponId = 7;
+    public const int woodId = 1;
+    public const int stoneId = 2;
+    public const int oreId = 3;
+    public const int goldId = 4;
+    public const int toolsId = 5;
+    public const int armorId = 6;
+    public const int weaponId = 7;
 
     //Added Items
-    public static int woodCount = 3;
+    public const int woodCount = 3;
 
     //MaxItems
-    public static int drownitsaMaxItems = 50;
+    public const int drownitsaMaxItems = 50;
 
     //TimesWork
-    public static int giveTime = 10;
-    public static int woodcutTime = 20;
-    public static int sitTime = 1000;
+    public const int giveTime = 10;
+    public const int woodcutTime = 20;
+    public const int sitTime = 20;
+    public const int waitTime = 10;
 
     //Sp Minus
+    public const int woodcutSpm = 10;
 
-    public static int woodcutSpm = 10;
-
+    //Texts
+    public const string textStateGone = "state_gone";
+    public const string textStateWalking = "state_walking";
+    public const string textStateExtract = "state_extract";
+    public const string textStateSit = "state_sit";
+    public const string textStateGive = "state_give";
+    public const string textStateWait = "state_wait";
 }

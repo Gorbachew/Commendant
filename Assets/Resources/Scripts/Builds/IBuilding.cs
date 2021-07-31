@@ -1,10 +1,9 @@
 
-
-using static MainData;
-
 public interface IBuilding
 {
-    void ChangeItems();
+    void RenderItems();
 
     void AddItems(int id, int count);
+
+    void Damage(IUnit damager, int count);
 }

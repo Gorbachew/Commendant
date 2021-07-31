@@ -9,8 +9,8 @@ public class BuildingsGrid : MonoBehaviour
     public Building _flyingBuilding;
 
     [SerializeField] private Button[] _btnsControl = new Button[3];
-    private Vector2Int _gridSize = new Vector2Int(GlobalConstants.placeSize, GlobalConstants.placeSize);
-    private GameObject[,] _gridPlanes = new GameObject[GlobalConstants.placeSize, GlobalConstants.placeSize];
+    private Vector2Int _gridSize = new Vector2Int(GlobalConstants.placeSizeX, GlobalConstants.placeSizeY);
+    private GameObject[,] _gridPlanes = new GameObject[GlobalConstants.placeSizeX, GlobalConstants.placeSizeY];
     private int _maxId = 0;
     private Building[,] _grid;
     private Camera _mainCamera;
@@ -129,9 +129,7 @@ public class BuildingsGrid : MonoBehaviour
     {
         _flyingBuilding.transform.position = new Vector3(-10, -10, -10);
         _flyingBuilding.Size = new Vector2Int(_flyingBuilding.Size.y, _flyingBuilding.Size.x);
-        Transform obj = _flyingBuilding.transform.Find("Model");
-        obj.Rotate(0, 90, 0);
-        obj.localPosition = new Vector3(obj.localPosition.z, obj.localPosition.y, obj.localPosition.x);
+        _flyingBuilding.transform.Rotate(0, 90, 0);
         StartCoroutine(FindEmployedCells(true));
     }
 

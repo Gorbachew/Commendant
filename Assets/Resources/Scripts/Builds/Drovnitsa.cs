@@ -7,7 +7,7 @@ public class Drovnitsa : MonoBehaviour, IBuilding
     [SerializeField] private GameObject[] _items;
     [SerializeField] private BuildingState _buildingState;
 
-    public void ChangeItems()
+    public void RenderItems()
     {
         int filteredItems = CountFilteredItems();
         for (int i = 0; i < _items.Length; i++)
@@ -32,7 +32,7 @@ public class Drovnitsa : MonoBehaviour, IBuilding
             }
            
         }
-        ChangeItems();
+        RenderItems();
     }
 
     private int CountFilteredItems()
@@ -47,4 +47,7 @@ public class Drovnitsa : MonoBehaviour, IBuilding
         }
         return filteredList.Count;
     }
+
+    public void Damage(IUnit damager, int count){}
+    
 }

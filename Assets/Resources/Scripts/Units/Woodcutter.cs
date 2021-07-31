@@ -1,20 +1,24 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnitsEvents;
 
 public class Woodcutter : MonoBehaviour, IUnit
 {
-    [SerializeField] private Tree[] _trees;
+    [SerializeField] private TreeEvents[] _trees;
     [SerializeField] private Drovnitsa[] _drovnitsy;
     [SerializeField] private RestBuilding[] _restBuildings;
     [SerializeField] private Transform _target;
+    [SerializeField] private bool _noStocks;
 
     private UnitState _unitState;
     private NavMeshAgent _navMeshAgent;
     private Transform _parent;
     private Animator _animator;
     private Collider _unitCollider;
+    private Coroutine _coroutine;
+    private IBuilding _ibuilding;
 
     void Start()
     {
@@ -25,8 +29,8 @@ public class Woodcutter : MonoBehaviour, IUnit
         _animator = GetComponent<Animator>();
         _unitCollider = _parent.GetComponent<CapsuleCollider>();
         //TODO debug
-        _unitState.sp = 0; 
-
+        _unitState.sp = 30;
+        _unitState.damage = 2;
         CalculateLogic();
     }
 
@@ -35,9 +39,19 @@ public class Woodcutter : MonoBehaviour, IUnit
         transform.localPosition = Vector3.zero;
     }
 
+    public void AttackMoment()
+    {
+        if (_ibuilding != null)
+        {
+            _ibuilding.Damage(this, _unitState.damage);
+        }
+    }
 
     public void CalculateLogic()
     {
+        _noStocks = false;
+        
+        SetNormalState();
         FindTargets();
         SetTarget();
 
@@ -45,45 +59,24 @@ public class Woodcutter : MonoBehaviour, IUnit
         
         if (dist >= GlobalConstants.stopDistance)
         {
-            StartCoroutine(Walk(new SWalk()
+            _coroutine = StartCoroutine(Walk(new SWalk()
             {
                 navMeshAgent = _navMeshAgent,
                 model = transform,
                 from = _parent,
-                to = _target,
+                target = _target,
+                coordinates = FindRandCoordinates(),
                 animator = _animator,
                 anim = "Walk",
+                unitState = _unitState,
                 iunit = this,
             }));
         }
         else
         {
-            if (_unitState.sp <= 0 && _unitState.items.Count == 0)
-            {
-                if (_restBuildings.Length > 0)
-                {
-                    StartCoroutine(Sit(new SSit()
-                    {
-                        navMeshAgent = _navMeshAgent,
-                        target = _target,
-                        animator = _animator,
-                        anim = "Sit",
-                        unitCollider = _unitCollider,
-                        time = GlobalConstants.sitTime,
-                        unitState = _unitState,
-                        ibuilding = _target.parent.GetComponent<IBuilding>(),
-                        iunit = this,
-                    }));
-                } else
-                {
-                    StartCoroutine(Wait(new SWait()
-                    {
-                        animator = _animator,
-                        anim = "Wait",
-                        time = GlobalConstants.sitTime,
-                    }));
-                }
-                
+            if ((_unitState.sp <= 0 && _unitState.items.Count == 0) || _noStocks)
+            { 
+                Rest();
                 return;
             }
 
@@ -92,12 +85,65 @@ public class Woodcutter : MonoBehaviour, IUnit
         } 
     }
 
+
+
+    private void Rest()
+    {
+        if (_restBuildings.Length > 0)
+        {
+            _coroutine = StartCoroutine(Sit(new SSit()
+            {
+                navMeshAgent = _navMeshAgent,
+                target = _target,
+                animator = _animator,
+                anim = "Sit",
+                unitCollider = _unitCollider,
+                time = GlobalConstants.sitTime,
+                unitState = _unitState,
+                restBuilding = _target.GetComponentInParent<RestBuilding>(),
+                buildingState = _target.GetComponentInParent<BuildingState>(),
+                iunit = this,
+            }));
+        }
+        else
+        {
+            int rand = Random.Range(0, 2);
+            switch (rand)
+            {
+                case 0:
+                    _coroutine = StartCoroutine(Wait(new SWait()
+                    {
+                        animator = _animator,
+                        anim = "Wait",
+                        time = GlobalConstants.waitTime,
+                        unitState = _unitState,
+                        iunit = this,
+                    }));
+                    break;
+                case 1:
+                    _coroutine = StartCoroutine(Walk(new SWalk()
+                    {
+                        navMeshAgent = _navMeshAgent,
+                        model = transform,
+                        from = _parent,
+                        coordinates = FindRandCoordinates(),
+                        animator = _animator,
+                        anim = "Walk",
+                        unitState = _unitState,
+                        iunit = this,
+                    }));
+                    break;
+            }
+        }
+    }
+
     private void Work() 
     {
         float items = _unitState.items.Count;
+        _ibuilding = _target.parent.GetComponent<IBuilding>();
         if (items <= 0)
         {
-            StartCoroutine(Extract(new SExtract()
+            _coroutine = StartCoroutine(Extract(new SExtract()
             {
                 target = _target,
                 animator = _animator,
@@ -112,19 +158,34 @@ public class Woodcutter : MonoBehaviour, IUnit
         }
         else
         {
-            StartCoroutine(Give(new SGive()
+            _coroutine = StartCoroutine(Give(new SGive()
             {
                 target = _target,
                 animator = _animator,
                 anim = "Working",
                 time = GlobalConstants.giveTime,
                 unitState = _unitState,
-                ibuilding = _target.parent.GetComponent<IBuilding>(),
+                ibuilding = _ibuilding,
                 iunit = this,
             }));
         }
     }
 
+    private void SetNormalState()
+    {
+        _navMeshAgent.enabled = true;
+        _unitCollider.isTrigger = false;
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
+
+        foreach (AnimatorControllerParameter parameter in _animator.parameters)
+        {
+            _animator.SetBool(parameter.name, false);
+        }
+    }
 
     private void SetTarget()
     {
@@ -132,10 +193,9 @@ public class Woodcutter : MonoBehaviour, IUnit
         {
             if (_unitState.sp <= 0)
             {
-                _target = FindNearestRestBuilding();
+               _target = FindNearestRestBuilding();
                 return;
             }
-
 
             _target = FindNearestTree();
         }
@@ -145,6 +205,14 @@ public class Woodcutter : MonoBehaviour, IUnit
         } 
     }
 
+    private Vector3 FindRandCoordinates()
+    {
+        return new Vector3(
+            Random.Range(0, 10),
+            0,
+            Random.Range(0, 10)
+            );
+    }
 
     private Transform FindNearestRestBuilding()
     {
@@ -152,14 +220,15 @@ public class Woodcutter : MonoBehaviour, IUnit
         foreach (RestBuilding d in _restBuildings)
         {
             float newDist = Vector3.Distance(_parent.transform.position, d.transform.position);
-            List<int> items = d.GetComponent<BuildingState>().items;
+            BuildingState bs = d.GetComponent<BuildingState>();
+            List<int> items = bs.items;
             if (dist > newDist)
             {
                 dist = newDist;
                 return d.transform.Find("Model");
             }
         }
-        return _parent.transform;
+        return transform;
     }
 
     private Transform FindNearestDrovnitsa()
@@ -175,13 +244,14 @@ public class Woodcutter : MonoBehaviour, IUnit
                 return d.transform.Find("Model");
             }
         }
-        return _parent.transform;
+        _noStocks = true;
+        return FindNearestRestBuilding();
     }
 
     private Transform FindNearestTree()
     {
         float dist = GlobalConstants.maxFindDistance;
-        foreach (Tree t in _trees)
+        foreach (TreeEvents t in _trees)
         {
             float newDist = Vector3.Distance(_parent.transform.position, t.transform.position);
             if (dist > newDist)
@@ -190,12 +260,28 @@ public class Woodcutter : MonoBehaviour, IUnit
                 return t.transform.Find("Model");
             }
         }
-        return _parent.transform;
+        return transform;
     }
+
+    private void FindNotBusyRestBuilding()
+    {
+        RestBuilding[] rbArray = GameObject.Find("Buildings").GetComponentsInChildren<RestBuilding>();
+        List<RestBuilding> rbList = new List<RestBuilding>();
+        foreach (RestBuilding rb in rbArray)
+        {
+            if (!rb.GetComponentInParent<BuildingState>().isBusy)
+            {
+                rbList.Add(rb);
+            }
+        }
+        _restBuildings = rbList.ToArray();
+    }
+
     private void FindTargets()
     {
-        _trees = GameObject.Find("Environment").GetComponentsInChildren<Tree>();
+        _trees = GameObject.Find("Environment").GetComponentsInChildren<TreeEvents>();
         _drovnitsy = GameObject.Find("Buildings").GetComponentsInChildren<Drovnitsa>();
-        _restBuildings = GameObject.Find("Buildings").GetComponentsInChildren<RestBuilding>();
+        FindNotBusyRestBuilding();
     }
+        
 }

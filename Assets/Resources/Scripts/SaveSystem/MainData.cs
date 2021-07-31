@@ -18,7 +18,7 @@ public class MainData
         public int[] _items;
         public bool _isBouild, _isWork;
         public string _type; 
-        public SVec3 _pos, _posObj, _rotObj;
+        public SVec3 _pos, _rot;
     }
 
     [Serializable]

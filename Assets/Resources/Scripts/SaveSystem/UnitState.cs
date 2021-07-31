@@ -9,6 +9,8 @@ public class UnitState : MonoBehaviour
     public int hp;
     public int sp;
     public int level;
+    public int damage;
+    public string state;
     public List<int> items = new List<int>();
 
     private void Awake()

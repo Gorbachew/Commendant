@@ -26,7 +26,7 @@ public class Building : MonoBehaviour
     {
         if (_ibuilding != null)
         {
-            _ibuilding.ChangeItems();
+            _ibuilding.RenderItems();
         }
     }
 
@@ -54,17 +54,10 @@ public class Building : MonoBehaviour
                 build._pos._y,
                 build._pos._z
             );
-        Transform obj = _buildingState.transform.Find("Model");
-        obj.transform.localPosition = new Vector3(
-                build._posObj._x,
-                build._posObj._y,
-                build._posObj._z
-            );
-
-        obj.transform.localRotation = Quaternion.Euler(
-                build._rotObj._x,
-                build._rotObj._y,
-                build._rotObj._z
+        _buildingState.transform.rotation = Quaternion.Euler(
+                build._rot._x,
+                build._rot._y,
+                build._rot._z
             );
     }
 

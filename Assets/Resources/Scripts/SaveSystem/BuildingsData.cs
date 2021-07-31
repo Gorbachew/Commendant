@@ -30,17 +30,11 @@ public class BuildingsData
                 build[i].transform.position.y,
                 build[i].transform.position.z
                 );
-            _builds[i]._posObj = new SVec3(
-                build[i].model.transform.localPosition.x,
-                build[i].model.transform.localPosition.y,
-                build[i].model.transform.localPosition.z
+            _builds[i]._rot = new SVec3(
+                build[i].transform.eulerAngles.x,
+                build[i].transform.eulerAngles.y,
+                build[i].transform.eulerAngles.z
                 );
-            _builds[i]._rotObj = new SVec3(
-                build[i].model.transform.eulerAngles.x,
-                build[i].model.transform.eulerAngles.y,
-                build[i].model.transform.eulerAngles.z
-                );
-
         }
 
     }
