@@ -330,9 +330,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 0}
-  type: Drovnitsa
+  resources: wood
   isBuild: 0
   isWork: 0
+  isBusy: 0
   id: 0
   hp: 0
   level: 0

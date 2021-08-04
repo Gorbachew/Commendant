@@ -40,13 +40,13 @@ public class GlobalEvents : MonoBehaviour
 
             for (int i = 0; i < ud._units.Length; i++)
             {
-                UnitState unit = FindUnits(ud._units[i]._id);
+                UnitState unit = FindUnits(ud._units[i].id);
                 if (unit)
                 {
                     unit.GetComponent<Unit>().Enrichment(ud._units[i]);
                 } else
                 {
-                    string name = OperationsHelper.CloneClearing(ud._units[i]._type);
+                    string name = OperationsHelper.CloneClearing(ud._units[i].type);
                     GameObject obj = Instantiate(Resources.Load("Prefabs/Units/Citizen"), _unitsFolder) as GameObject;
                     obj.GetComponent<Unit>().Enrichment(ud._units[i]);
                 }
@@ -55,14 +55,13 @@ public class GlobalEvents : MonoBehaviour
 
             for (int i = 0; i < bd._builds.Length; i++)
             {
-                BuildingState build = FindBuildings(bd._builds[i]._id);
+                BuildingState build = FindBuildings(bd._builds[i].id);
                 if (build)
                 {
                     build.GetComponent<Building>().Enrichment(bd._builds[i]);
                     continue;
                 }
-                string name = OperationsHelper.CloneClearing(bd._builds[i]._type);
-                GameObject obj = Instantiate(Resources.Load("Prefabs/Builds/" + name), _buildingsFolder) as GameObject;
+                GameObject obj = Instantiate(Resources.Load("Prefabs/Builds/" + bd._builds[i].name), _buildingsFolder) as GameObject;
                 obj.GetComponent<Building>().Enrichment(bd._builds[i]);
             }
         }

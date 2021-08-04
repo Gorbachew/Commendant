@@ -18,7 +18,6 @@ public class TreeEvents : MonoBehaviour, IBuilding
 
     public void Damage(IUnit damager, int count)
     {
-        Debug.Log(count);
         _animator.SetTrigger("Damage");
     }
 }

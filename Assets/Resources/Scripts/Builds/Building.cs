@@ -11,10 +11,12 @@ public class Building : MonoBehaviour
     private IBuilding _ibuilding;
     public Vector2Int Size = Vector2Int.one;
 
+
     private void Awake()
     {
         _buildingState = GetComponent<BuildingState>();
         _ibuilding = GetComponent<IBuilding>();
+       
         OriginalRenderers = new Material[MainRenderers.Length];
         for (int i = 0; i < MainRenderers.Length; i++)
         {
@@ -41,23 +43,23 @@ public class Building : MonoBehaviour
 
     public void Enrichment(SBuild build)
     {
-        _buildingState.id = build._id;
-        _buildingState.hp = build._hp;
-        _buildingState.level = build._level;
-        _buildingState.items = build._items.ToList<int>();
+        _buildingState.id = build.id;
+        _buildingState.hp = build.hp;
+        _buildingState.level = build.level;
+        _buildingState.items = build.items.ToList<int>();
 
-        _buildingState.isBuild = build._isBouild;
-        _buildingState.isWork = build._isWork;
+        _buildingState.isBuild = build.isBouild;
+        _buildingState.isWork = build.isWork;
 
         _buildingState.transform.position = new Vector3(
-                build._pos._x,
-                build._pos._y,
-                build._pos._z
+                build.pos.x,
+                build.pos.y,
+                build.pos.z
             );
         _buildingState.transform.rotation = Quaternion.Euler(
-                build._rot._x,
-                build._rot._y,
-                build._rot._z
+                build.rot.x,
+                build.rot.y,
+                build.rot.z
             );
     }
 
@@ -81,8 +83,8 @@ public class Building : MonoBehaviour
         _buildingState.isBuild = true;
     }
 
-    public void AddItems(int id, int count)
-    {
-        _ibuilding.AddItems(id, count);
-    }
+    //public void AddItems(int id, int count)
+    //{
+    //    _ibuilding.AddItems(id, count);
+    //}
 }

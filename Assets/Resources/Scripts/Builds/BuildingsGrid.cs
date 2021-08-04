@@ -8,7 +8,9 @@ public class BuildingsGrid : MonoBehaviour
     public Transform _buildingsFolder;
     public Building _flyingBuilding;
 
-    [SerializeField] private Button[] _btnsControl = new Button[3];
+   
+    [SerializeField] private ResourcesState _resourcesState;
+    [SerializeField] private ButtonsState _buttonsState;
     private Vector2Int _gridSize = new Vector2Int(GlobalConstants.placeSizeX, GlobalConstants.placeSizeY);
     private GameObject[,] _gridPlanes = new GameObject[GlobalConstants.placeSizeX, GlobalConstants.placeSizeY];
     private int _maxId = 0;
@@ -22,12 +24,7 @@ public class BuildingsGrid : MonoBehaviour
         _mainCamera = Camera.main;
         _green = Resources.Load("Materials/Green") as Material;
         _red = Resources.Load("Materials/Red") as Material;
-
-        _btnsControl[0].onClick.AddListener(PlaceFlyingBuilding);
-        _btnsControl[1].onClick.AddListener(RotateFlyingBuilding);
-        _btnsControl[2].onClick.AddListener(CancelFlyingBuilding);
-
-        ChangeBtnsControll(false);
+        _buttonsState.ChangeBtnsControll(false);
     }
 
     private void Start()
@@ -54,7 +51,7 @@ public class BuildingsGrid : MonoBehaviour
  
         _flyingBuilding = Instantiate(buildingPrefab, new Vector3(-10, -10, -10), Quaternion.identity);
 
-        ChangeBtnsControll(true);
+        _buttonsState.ChangeBtnsControll(true);
         StartCoroutine(FindEmployedCells(true));
     }
 
@@ -82,11 +79,30 @@ public class BuildingsGrid : MonoBehaviour
             }
         }
     }
-
+    public void PlaceFlyingBuilding()
+    {
+        StartCoroutine(FindEmployedCells(false));
+        _buttonsState.ChangeBtnsControll(false);
+        _flyingBuilding.transform.SetParent(_buildingsFolder);
+        _flyingBuilding.SetNormal();
+        _maxId++;
+        BuildingState bs = _flyingBuilding.GetComponent<BuildingState>();
+        bs.id = _maxId;
+        _resourcesState.FindBuildings(bs.resources);
+        _resourcesState.UpdateResouces(bs.resources);
+        _flyingBuilding = null;
+    }
+    public void RotateFlyingBuilding()
+    {
+        _flyingBuilding.transform.position = new Vector3(-10, -10, -10);
+        _flyingBuilding.Size = new Vector2Int(_flyingBuilding.Size.y, _flyingBuilding.Size.x);
+        _flyingBuilding.transform.Rotate(0, 90, 0);
+        StartCoroutine(FindEmployedCells(true));
+    }
     public void CancelFlyingBuilding()
     {
         StartCoroutine(FindEmployedCells(false));
-        ChangeBtnsControll(false);
+        _buttonsState.ChangeBtnsControll(false);
         Destroy(_flyingBuilding.gameObject);
         _flyingBuilding = null;
     }
@@ -113,25 +129,7 @@ public class BuildingsGrid : MonoBehaviour
     }
 
 
-    private void PlaceFlyingBuilding()
-    {
-        StartCoroutine(FindEmployedCells(false));
-        ChangeBtnsControll(false);
-        _flyingBuilding.transform.SetParent(_buildingsFolder);
-
-        _flyingBuilding.SetNormal();
-        _maxId++;
-        _flyingBuilding.GetComponent<BuildingState>().id = _maxId;
-        _flyingBuilding = null;
-    }
-
-    private void RotateFlyingBuilding()
-    {
-        _flyingBuilding.transform.position = new Vector3(-10, -10, -10);
-        _flyingBuilding.Size = new Vector2Int(_flyingBuilding.Size.y, _flyingBuilding.Size.x);
-        _flyingBuilding.transform.Rotate(0, 90, 0);
-        StartCoroutine(FindEmployedCells(true));
-    }
+    
 
     private bool IsPlaceTaken(int placeX, int placeY)
     {
@@ -146,7 +144,7 @@ public class BuildingsGrid : MonoBehaviour
         return false;
     }
 
-    IEnumerator FindEmployedCells(bool state)
+    private IEnumerator FindEmployedCells(bool state)
     {
         yield return new WaitForSeconds(0.1f);
 
@@ -186,11 +184,5 @@ public class BuildingsGrid : MonoBehaviour
         
     }
 
-    private void ChangeBtnsControll(bool state)
-    {
-        foreach (Button btn in _btnsControl)
-        {
-            btn.gameObject.SetActive(state);
-        }
-    }
+    
 }

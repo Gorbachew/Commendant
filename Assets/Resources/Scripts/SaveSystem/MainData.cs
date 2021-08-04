@@ -6,33 +6,33 @@ public class MainData
     [Serializable]
     public struct SUnit
     {
-        public int _id, _level, _hp;
-        public string _type;
-        public SVec3 _pos, _posObj, _rotObj;
+        public int id, level, hp;
+        public string type;
+        public SVec3 pos, posObj, rotObj;
     }
 
     [Serializable]
     public struct SBuild
     {
-        public int _id, _level, _hp;
-        public int[] _items;
-        public bool _isBouild, _isWork;
-        public string _type; 
-        public SVec3 _pos, _rot;
+        public int id, level, hp;
+        public string name;
+        public int[] items;
+        public bool isBouild, isWork;
+        public SVec3 pos, rot;
     }
 
     [Serializable]
     public struct SVec3
     {
-        public float _x;
-        public float _y;
-        public float _z;
+        public float x;
+        public float y;
+        public float z;
 
         public SVec3(float x, float y, float z)
         {
-            _x = x;
-            _y = y;
-            _z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
     }
 

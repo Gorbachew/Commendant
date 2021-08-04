@@ -6,6 +6,16 @@ public class Drovnitsa : MonoBehaviour, IBuilding
 {
     [SerializeField] private GameObject[] _items;
     [SerializeField] private BuildingState _buildingState;
+    [SerializeField] private ResourcesState _resourcesState;
+
+
+    private void Awake()
+    {
+        if (_buildingState.resources != null)
+        {
+            _resourcesState = GameObject.Find("Canvas/Resources").GetComponent<ResourcesState>();
+        }
+    }
 
     public void RenderItems()
     {
@@ -33,6 +43,8 @@ public class Drovnitsa : MonoBehaviour, IBuilding
            
         }
         RenderItems();
+        _resourcesState.UpdateResouces(_buildingState.resources);
+
     }
 
     private int CountFilteredItems()

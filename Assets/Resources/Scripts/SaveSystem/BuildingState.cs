@@ -4,7 +4,7 @@ using UnityEngine;
 public class BuildingState : MonoBehaviour
 {
     public GameObject model;
-    public string type;
+    public string resources;
 
     public bool isBuild;
     public bool isWork;

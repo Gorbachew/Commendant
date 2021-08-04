@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,7 +5,6 @@ public class TouchController : MonoBehaviour
 {
 
     [SerializeField] private BuildingsGrid _buildingsGrid;
-    [SerializeField] private RectTransform _btnsUnitsTypes;
     [SerializeField] private ButtonsState _buttonsState;
 
     void FixedUpdate()
@@ -39,12 +37,13 @@ public class TouchController : MonoBehaviour
                 {
                     if (hit.collider.GetComponent(typeof(Building)))
                     {
-                        hit.collider.GetComponent<Building>().AddItems(GlobalConstants.woodId, 1);
+                        _buttonsState.OpenBuildingInfo(hit.collider.gameObject);
+                        //hit.collider.GetComponent<Building>().AddItems(GlobalConstants.woodId, 1);
                     }
                     else if (hit.collider.GetComponent(typeof(Unit)))
                     {
                         Unit unit = hit.collider.GetComponent<Unit>();
-                        _buttonsState.OpenCategory(_btnsUnitsTypes, unit);
+                        _buttonsState.OpenUnitsType(unit);
                     }
                 }
             }

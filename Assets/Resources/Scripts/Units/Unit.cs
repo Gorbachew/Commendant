@@ -26,26 +26,26 @@ public class Unit : MonoBehaviour
 
     public void Enrichment(SUnit unit)
     {
-        _unitState.id = unit._id;
-        _unitState.hp = unit._hp;
-        _unitState.type = unit._type;
-        ChangeType(unit._type);
-        _unitState.level = unit._level;
+        _unitState.id = unit.id;
+        _unitState.hp = unit.hp;
+        _unitState.type = unit.type;
+        ChangeType(unit.type);
+        _unitState.level = unit.level;
         _unitState.transform.position = new Vector3(
-                unit._pos._x,
-                unit._pos._y,
-                unit._pos._z
+                unit.pos.x,
+                unit.pos.y,
+                unit.pos.z
             );
         _unitState.model.transform.localPosition = new Vector3(
-                unit._posObj._x,
-                unit._posObj._y,
-                unit._posObj._z
+                unit.posObj.x,
+                unit.posObj.y,
+                unit.posObj.z
             );
 
         _unitState.model.transform.localRotation = Quaternion.Euler(
-                unit._rotObj._x,
-                unit._rotObj._y,
-                unit._rotObj._z
+                unit.rotObj.x,
+                unit.rotObj.y,
+                unit.rotObj.z
             );
     }
 }
