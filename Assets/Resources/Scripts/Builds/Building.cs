@@ -6,38 +6,17 @@ using static MainData;
 public class Building : MonoBehaviour
 {
     public Renderer[] MainRenderers;
-    private Material[] OriginalRenderers;
     private BuildingState _buildingState;
-    private IBuilding _ibuilding;
     public Vector2Int Size = Vector2Int.one;
 
 
     private void Awake()
     {
         _buildingState = GetComponent<BuildingState>();
-        _ibuilding = GetComponent<IBuilding>();
-       
-        OriginalRenderers = new Material[MainRenderers.Length];
-        for (int i = 0; i < MainRenderers.Length; i++)
-        {
-            OriginalRenderers[i] = MainRenderers[i].material;
-        }
-    }
-
-    private void Start()
-    {
-        if (_ibuilding != null)
-        {
-            _ibuilding.RenderItems();
-        }
     }
 
     public void SetNormal()
     {
-        for (int i = 0; i < MainRenderers.Length; i++)
-        {
-            MainRenderers[i].material = OriginalRenderers[i];
-        }
         StartCoroutine(BuildDelay());
     }
 

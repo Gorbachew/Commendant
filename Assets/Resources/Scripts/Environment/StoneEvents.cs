@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class TreeEvents : MonoBehaviour, IBuilding
+public class StoneEvents : MonoBehaviour, IBuilding
 {
-
     private Animator _animator;
 
     private void Awake()
@@ -12,8 +11,6 @@ public class TreeEvents : MonoBehaviour, IBuilding
 
     public void Damage(IUnit damager, int count)
     {
-        _animator.SetTrigger("Damage");
+        //_animator.SetTrigger("Damage");
     }
-
-    
 }

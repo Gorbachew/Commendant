@@ -50,7 +50,7 @@ public class ResourcesState : MonoBehaviour
             case "food":
                 break;
             case "wood":
-                FindWoodBuildings();
+                FindWoodStockBuildings();
                 break;
             case "stone":
                 break;
@@ -63,7 +63,7 @@ public class ResourcesState : MonoBehaviour
             case "gold":
                 break;
             case "all":
-                FindWoodBuildings();
+                FindWoodStockBuildings();
                 break;
         }
 
@@ -85,13 +85,16 @@ public class ResourcesState : MonoBehaviour
 
     
 
-    private void FindWoodBuildings()
+    private void FindWoodStockBuildings()
     {
-        Drovnitsa[] dArr = _buildingsFolder.GetComponentsInChildren<Drovnitsa>();
+        BuildingState[] sArr = _buildingsFolder.GetComponentsInChildren<BuildingState>();
         _drovnitsy.Clear();
-        foreach (Drovnitsa d in dArr)
+        foreach (BuildingState s in sArr)
         {
-            _drovnitsy.Add(d.GetComponent<BuildingState>());
+            if (s.resources == "wood")
+            {
+                _drovnitsy.Add(s);
+            }
         }
     }
 

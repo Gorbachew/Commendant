@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnitsEvents;
 
-public class Woodcutter : MonoBehaviour, IUnit
+public class Miner : MonoBehaviour, IUnit
 {
-    [SerializeField] private List<TreeEvents> _trees = new List<TreeEvents>();
-    [SerializeField] private List<Stock> _drovnitsy = new List<Stock>();
+    [SerializeField] private List<StoneEvents> _stones = new List<StoneEvents>();
+    [SerializeField] private List<Stock> _stocks = new List<Stock>();
     [SerializeField] private RestBuilding[] _restBuildings;
     [SerializeField] private Transform _target;
     [SerializeField] public bool _noStocks;
@@ -49,13 +49,13 @@ public class Woodcutter : MonoBehaviour, IUnit
     public void CalculateLogic()
     {
         _noStocks = false;
-        
+
         SetNormalState();
         FindTargets();
         SetTarget();
 
         float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
-        
+
         if (dist >= GlobalConstants.stopDistance)
         {
             _coroutine = StartCoroutine(Walk(new SWalk()
@@ -74,14 +74,14 @@ public class Woodcutter : MonoBehaviour, IUnit
         else
         {
             if ((_unitState.sp <= 0 && _unitState.items.Count == 0) || _noStocks)
-            { 
+            {
                 Rest();
                 return;
             }
 
             Work();
 
-        } 
+        }
     }
 
     private void Rest()
@@ -134,7 +134,7 @@ public class Woodcutter : MonoBehaviour, IUnit
         }
     }
 
-    private void Work() 
+    private void Work()
     {
         float items = _unitState.items.Count;
         _ibuilding = _target.parent.GetComponent<IBuilding>();
@@ -145,11 +145,11 @@ public class Woodcutter : MonoBehaviour, IUnit
                 target = _target,
                 animator = _animator,
                 anim = "Woodcut",
-                time = GlobalConstants.woodcutTime,
+                time = GlobalConstants.mineStoneTime,
                 unitState = _unitState,
-                itemId = GlobalConstants.woodId,
-                itemCount = GlobalConstants.woodCount,
-                spMinus = GlobalConstants.woodcutSpm,
+                itemId = GlobalConstants.stoneId,
+                itemCount = GlobalConstants.stoneCount,
+                spMinus = GlobalConstants.mineStoneSpm,
                 buildingState = _target.GetComponentInParent<BuildingState>(),
                 iunit = this,
             }));
@@ -192,63 +192,54 @@ public class Woodcutter : MonoBehaviour, IUnit
         {
             if (_unitState.sp <= 0)
             {
-               _target = FindNearestRestBuilding(new SFindNearestRestBuilding()
-               {
-                   restBuildings = _restBuildings,
-                   transform = _parent.transform,
-               });
+                _target = FindNearestRestBuilding(new SFindNearestRestBuilding()
+                {
+                    restBuildings = _restBuildings,
+                    transform = _parent.transform,
+                });
                 return;
             }
 
-            _target = FindNearestTree(new SFindNearestTree()
+            _target = FindNearestStone(new SFindNearestStone()
             {
-                trees = _trees.ToArray(),
+                stones = _stones.ToArray(),
                 transform = _parent.transform,
             });
         }
         else
         {
-            _target = FindNearestDrovnitsa(new SFindNearestDrovnitsa()
+            _target = FindNearestStoneStock(new SFindNearestStoneStock()
             {
                 restBuildings = _restBuildings,
                 transform = _parent.transform,
-                stocks = _drovnitsy.ToArray(),
-                woodcutter = GetComponent<Woodcutter>()
+                stocks = _stocks.ToArray(),
+                miner = GetComponent<Miner>()
             });
-        } 
-    }
-
-    private Vector3 FindRandCoordinates()
-    {
-        return new Vector3(
-            Random.Range(0, 10),
-            0,
-            Random.Range(0, 10)
-            );
+        }
     }
 
     private void FindTargets()
     {
-        TreeEvents[] trees = GameObject.Find("Environment").GetComponentsInChildren<TreeEvents>();
-        _trees.Clear();
-        foreach (TreeEvents item in trees)
+        StoneEvents[] stones = GameObject.Find("Environment").GetComponentsInChildren<StoneEvents>();
+        _stones.Clear();
+        foreach (StoneEvents item in stones)
         {
             if (!item.GetComponent<BuildingState>().isBusy)
             {
-                _trees.Add(item.GetComponent<TreeEvents>());
+                _stones.Add(item.GetComponent<StoneEvents>());
             }
         }
 
         BuildingState[] stocks = GameObject.Find("Buildings").GetComponentsInChildren<BuildingState>();
-        _drovnitsy.Clear();
+        _stocks.Clear();
         foreach (BuildingState item in stocks)
         {
-            if (item.resources == "wood")
+            if (item.resources == "stone")
             {
-                _drovnitsy.Add(item.GetComponent<Stock>());
+                _stocks.Add(item.GetComponent<Stock>());
             }
         }
         _restBuildings = FindRestBuilding();
     }
-        
+
 }

@@ -28,18 +28,22 @@ public class GlobalConstants
 
     //Added Items
     public const int woodCount = 3;
+    public const int stoneCount = 1;
 
     //MaxItems
     public const int drownitsaMaxItems = 50;
+    public const int stoneStockMaxItems = 50;
 
     //TimesWork
     public const int giveTime = 10;
     public const int woodcutTime = 20;
+    public const int mineStoneTime = 30;
     public const int sitTime = 20;
     public const int waitTime = 10;
 
     //Sp Minus
     public const int woodcutSpm = 10;
+    public const int mineStoneSpm = 10;
 
     //Texts
     public const string textStateGone = "state_gone";
