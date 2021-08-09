@@ -110,9 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62df31a80444a4fba6122dc5c051e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainRenderers:
-  - {fileID: 4629531340032233070}
-  Size: {x: 2, y: 2}
+  _size: {x: 2, y: 2}
+  _scaffoldings: []
 --- !u!65 &372395269296981849
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -155,6 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 4048303301656704673}
+  nameTech: Tree
+  nameGame: 
   resources: 
   isBuild: 1
   isWork: 0
@@ -162,6 +163,8 @@ MonoBehaviour:
   id: 0
   hp: 0
   level: 0
+  buildState: 0
+  buildTime: 0
   items: 
 --- !u!208 &2434879955404844259
 NavMeshObstacle:

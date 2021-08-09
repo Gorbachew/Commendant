@@ -54,6 +54,11 @@ public class Woodcutter : MonoBehaviour, IUnit
         FindTargets();
         SetTarget();
 
+        if (_target == null)
+        {
+            _target = _parent.transform;
+        }
+
         float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
         
         if (dist >= GlobalConstants.stopDistance)
@@ -143,6 +148,7 @@ public class Woodcutter : MonoBehaviour, IUnit
             _coroutine = StartCoroutine(Extract(new SExtract()
             {
                 target = _target,
+                unit = _parent,
                 animator = _animator,
                 anim = "Woodcut",
                 time = GlobalConstants.woodcutTime,
@@ -218,15 +224,6 @@ public class Woodcutter : MonoBehaviour, IUnit
         } 
     }
 
-    private Vector3 FindRandCoordinates()
-    {
-        return new Vector3(
-            Random.Range(0, 10),
-            0,
-            Random.Range(0, 10)
-            );
-    }
-
     private void FindTargets()
     {
         TreeEvents[] trees = GameObject.Find("Environment").GetComponentsInChildren<TreeEvents>();
@@ -243,7 +240,8 @@ public class Woodcutter : MonoBehaviour, IUnit
         _drovnitsy.Clear();
         foreach (BuildingState item in stocks)
         {
-            if (item.resources == "wood")
+            BuildingState bs = item.GetComponentInParent<BuildingState>();
+            if (bs.isReady && item.resources == "wood")
             {
                 _drovnitsy.Add(item.GetComponent<Stock>());
             }

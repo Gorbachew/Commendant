@@ -19,7 +19,7 @@ public class UnitsEvents : MonoBehaviour
 
     public struct SExtract
     {
-        public Transform target;
+        public Transform unit, target;
         public Animator animator;
         public string anim;
         public float time;
@@ -65,6 +65,18 @@ public class UnitsEvents : MonoBehaviour
         public IUnit iunit;
     }
 
+    public struct SBuild
+    {
+        public Transform target;
+        public Animator animator;
+        public string anim;
+        public float time;
+        public UnitState unitState;
+        public BuildingState buildingState;
+        public Building building;
+        public IUnit iunit;
+    }
+
     public static IEnumerator Walk(SWalk state)
     {
         if (state.navMeshAgent.enabled)
@@ -77,7 +89,11 @@ public class UnitsEvents : MonoBehaviour
             {
                 if (state.target)
                 {
-                    state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateGone) + " " + state.target.parent.name;
+                    state.unitState.state =
+                        Texts.get(GlobalState.language, GlobalConstants.textStateGone)
+                        + " " +
+                        state.target.GetComponentInParent<BuildingState>().nameGame;
+
                     dist = Vector3.Distance(state.from.transform.position, state.target.position);
                     state.navMeshAgent.SetDestination(state.target.position);
                 }
@@ -98,20 +114,38 @@ public class UnitsEvents : MonoBehaviour
 
     public static IEnumerator Extract(SExtract state)
     {
+        float time = state.time;
         state.unitState.transform.LookAt(state.target);
         state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
         state.animator.SetBool(state.anim, true);
         state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateExtract);
         state.buildingState.isBusy = true;
-        yield return new WaitForSeconds(state.time);
-        state.buildingState.isBusy = false;
-        state.animator.SetBool(state.anim, false);
-        for (int i = 0; i < state.itemCount; i++)
+
+        while (time > 0)
         {
-            state.unitState.items.Add(state.itemId);
+            float dist = Vector3.Distance(state.unit.position, state.target.position);
+            if (dist < GlobalConstants.stopDistance)
+            {
+                time--;
+                yield return new WaitForSeconds(1);
+                if (time <= 0)
+                {
+                    for (int i = 0; i < state.itemCount; i++)
+                    {
+                        state.unitState.items.Add(state.itemId);
+                    }
+                    state.unitState.sp -= state.spMinus;
+                    state.iunit.CalculateLogic();
+                }
+            }
+            else
+            {
+                state.iunit.CalculateLogic();
+                yield return null;
+            }
         }
-        state.unitState.sp -= state.spMinus;
-        state.iunit.CalculateLogic();
+
+        
     }
 
 
@@ -164,13 +198,26 @@ public class UnitsEvents : MonoBehaviour
         }
     }
 
-
     public static IEnumerator Wait(SWait state)
     {
         state.animator.SetBool(state.anim, true);
         state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateWait);
         yield return new WaitForSeconds(state.time);
         state.animator.SetBool(state.anim, false);
+        state.iunit.CalculateLogic();
+    }
+
+    public static IEnumerator Build(SBuild state)
+    {
+        state.unitState.transform.LookAt(state.target);
+        state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        state.animator.SetBool(state.anim, true);
+        state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateBuilds);
+        state.buildingState.isBusy = true;
+        yield return new WaitForSeconds(state.time);
+        state.buildingState.isBusy = false;
+        state.animator.SetBool(state.anim, false);
+        state.building.Build(state.unitState.building);
         state.iunit.CalculateLogic();
     }
 
@@ -208,68 +255,84 @@ public class UnitsEvents : MonoBehaviour
         public Transform transform;
     }
 
+    public struct SFindNearestNotReadyBuilding
+    {
+        public BuildingState[] buildingState;
+        public Transform transform;
+    }
+
     public static Transform FindNearestRestBuilding(SFindNearestRestBuilding state)
     {
         float dist = GlobalConstants.maxFindDistance;
-        foreach (RestBuilding d in state.restBuildings)
+        Transform nearestObj = state.transform;
+        foreach (RestBuilding item in state.restBuildings)
         {
-            float newDist = Vector3.Distance(state.transform.position, d.transform.position);
-            BuildingState bs = d.GetComponent<BuildingState>();
+            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
+            BuildingState bs = item.GetComponent<BuildingState>();
             List<int> items = bs.items;
             if (dist > newDist)
             {
                 dist = newDist;
-                return d.transform.Find("Model");
+                nearestObj = item.transform;
             }
         }
-        return state.transform;
+        return nearestObj.Find("Model");
     }
 
     public static Transform FindNearestDrovnitsa(SFindNearestDrovnitsa state)
     {
         float dist = GlobalConstants.maxFindDistance;
-        foreach (Stock d in state.stocks)
+        Transform nearestObj = null;
+        foreach (Stock item in state.stocks)
         {
-            float newDist = Vector3.Distance(state.transform.position, d.transform.position);
-            List<int> items = d.GetComponent<BuildingState>().items;
+            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
+            List<int> items = item.GetComponent<BuildingState>().items;
             if (dist > newDist && items.Count < GlobalConstants.drownitsaMaxItems)
             {
                 dist = newDist;
-                return d.transform.Find("Model");
+                nearestObj = item.transform;
             }
         }
-        state.woodcutter._noStocks = true;
-        return FindNearestRestBuilding(new SFindNearestRestBuilding()
+
+        if (nearestObj == null)
         {
-            transform = state.transform,
-            restBuildings = state.restBuildings,
-        });
+            state.woodcutter._noStocks = true;
+            return FindNearestRestBuilding(new SFindNearestRestBuilding()
+            {
+                transform = state.transform,
+                restBuildings = state.restBuildings,
+            });
+        }
+        
+        return nearestObj.Find("Model");
     }
 
     public static Transform FindNearestTree(SFindNearestTree state)
     {
         float dist = GlobalConstants.maxFindDistance;
-        foreach (TreeEvents t in state.trees)
+        Transform nearestObj = state.transform;
+        foreach (TreeEvents item in state.trees)
         {
-            float newDist = Vector3.Distance(state.transform.position, t.transform.position);
+            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
             if (dist > newDist)
             {
                 dist = newDist;
-                return t.transform.Find("Model");
+                nearestObj = item.transform;
             }
         }
-        return state.transform;
+        return nearestObj.Find("Model");
     }
 
     public static RestBuilding[] FindRestBuilding()
     {
         RestBuilding[] rbArray = GameObject.Find("Buildings").GetComponentsInChildren<RestBuilding>();
         List<RestBuilding> rbList = new List<RestBuilding>();
-        foreach (RestBuilding rb in rbArray)
+        foreach (RestBuilding item in rbArray)
         {
-            if (!rb.GetComponentInParent<BuildingState>().isBusy)
+            BuildingState bs = item.GetComponentInParent<BuildingState>();
+            if (bs.isReady && !bs.isBusy)
             {
-                rbList.Add(rb);
+                rbList.Add(item);
             }
         }
         return rbList.ToArray();
@@ -278,37 +341,62 @@ public class UnitsEvents : MonoBehaviour
     public static Transform FindNearestStoneStock(SFindNearestStoneStock state)
     {
         float dist = GlobalConstants.maxFindDistance;
-        foreach (Stock d in state.stocks)
+        Transform nearestObj = null;
+        foreach (Stock item in state.stocks)
         {
-            float newDist = Vector3.Distance(state.transform.position, d.transform.position);
-            List<int> items = d.GetComponent<BuildingState>().items;
+            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
+            List<int> items = item.GetComponent<BuildingState>().items;
             if (dist > newDist && items.Count < GlobalConstants.drownitsaMaxItems)
             {
                 dist = newDist;
-                return d.transform.Find("Model");
+                nearestObj = item.transform;
             }
         }
-        state.miner._noStocks = true;
-        return FindNearestRestBuilding(new SFindNearestRestBuilding()
+
+        if (nearestObj == null)
         {
-            transform = state.transform,
-            restBuildings = state.restBuildings,
-        });
+            state.miner._noStocks = true;
+            return FindNearestRestBuilding(new SFindNearestRestBuilding()
+            {
+                transform = state.transform,
+                restBuildings = state.restBuildings,
+            });
+        }
+
+        return nearestObj.Find("Model");
+        
     }
 
     public static Transform FindNearestStone(SFindNearestStone state)
     {
         float dist = GlobalConstants.maxFindDistance;
+        Transform nearestObj = state.transform;
         foreach (StoneEvents item in state.stones)
         {
             float newDist = Vector3.Distance(state.transform.position, item.transform.position);
             if (dist > newDist)
             {
                 dist = newDist;
-                return item.transform.Find("Model");
+                nearestObj = item.transform;
             }
         }
-        return state.transform;
+        return nearestObj.Find("Model");
+    }
+
+    public static Transform FindNearestNotReadyBuilding(SFindNearestNotReadyBuilding state)
+    {
+        float dist = GlobalConstants.maxFindDistance;
+        Transform nearestObj = state.transform;
+        foreach (BuildingState item in state.buildingState)
+        {
+            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
+            if (!item.isReady && dist > newDist)
+            {
+                dist = newDist;
+                nearestObj = item.transform;
+            }
+        }
+        return nearestObj.Find("Model");
     }
 
 

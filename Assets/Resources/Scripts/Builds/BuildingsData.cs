@@ -23,6 +23,7 @@ public class BuildingsData
 
             _builds[i].isBouild = build[i].isBuild;
             _builds[i].isWork = build[i].isWork;
+            _builds[i].isReady = build[i].isReady;
 
             _builds[i].pos = new SVec3(
                 build[i].transform.position.x,

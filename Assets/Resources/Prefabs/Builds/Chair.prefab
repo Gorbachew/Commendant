@@ -163,9 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62df31a80444a4fba6122dc5c051e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainRenderers:
-  - {fileID: 2592640185719845502}
-  Size: {x: 1, y: 1}
+  _size: {x: 1, y: 1}
+  _scaffoldings: []
 --- !u!114 &2003206539015097768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,12 +178,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 0}
-  type: Chair
+  nameTech: Chair
+  nameGame: 
+  resources: 
   isBuild: 0
   isWork: 0
+  isBusy: 0
   id: 0
   hp: 0
   level: 0
+  buildState: 0
+  buildTime: 0
   items: 
 --- !u!54 &6200108458827532032
 Rigidbody:

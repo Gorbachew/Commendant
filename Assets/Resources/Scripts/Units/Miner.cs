@@ -54,6 +54,11 @@ public class Miner : MonoBehaviour, IUnit
         FindTargets();
         SetTarget();
 
+        if (_target == null)
+        {
+            _target = _parent.transform;
+        }
+
         float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
 
         if (dist >= GlobalConstants.stopDistance)
@@ -143,6 +148,7 @@ public class Miner : MonoBehaviour, IUnit
             _coroutine = StartCoroutine(Extract(new SExtract()
             {
                 target = _target,
+                unit = _parent,
                 animator = _animator,
                 anim = "Woodcut",
                 time = GlobalConstants.mineStoneTime,
@@ -152,7 +158,7 @@ public class Miner : MonoBehaviour, IUnit
                 spMinus = GlobalConstants.mineStoneSpm,
                 buildingState = _target.GetComponentInParent<BuildingState>(),
                 iunit = this,
-            }));
+            }));;
         }
         else
         {
@@ -234,7 +240,8 @@ public class Miner : MonoBehaviour, IUnit
         _stocks.Clear();
         foreach (BuildingState item in stocks)
         {
-            if (item.resources == "stone")
+            BuildingState bs = item.GetComponentInParent<BuildingState>();
+            if (bs.isReady && item.resources == "stone")
             {
                 _stocks.Add(item.GetComponent<Stock>());
             }

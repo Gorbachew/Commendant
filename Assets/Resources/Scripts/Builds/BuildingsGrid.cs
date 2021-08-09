@@ -51,6 +51,8 @@ public class BuildingsGrid : MonoBehaviour
  
         _flyingBuilding = Instantiate(buildingPrefab, new Vector3(-10, -10, -10), Quaternion.identity);
 
+        _flyingBuilding.GetComponent<Building>().StartPlacingBuilding();
+
         _buttonsState.ChangeBtnsControll(true);
         StartCoroutine(FindEmployedCells(true));
     }
@@ -88,14 +90,14 @@ public class BuildingsGrid : MonoBehaviour
         _maxId++;
         BuildingState bs = _flyingBuilding.GetComponent<BuildingState>();
         bs.id = _maxId;
-        _resourcesState.FindBuildings(bs.resources);
+        _resourcesState.FindStocksBuildings();
         _resourcesState.UpdateResouces(bs.resources);
         _flyingBuilding = null;
     }
     public void RotateFlyingBuilding()
     {
         _flyingBuilding.transform.position = new Vector3(-10, -10, -10);
-        _flyingBuilding.Size = new Vector2Int(_flyingBuilding.Size.y, _flyingBuilding.Size.x);
+        _flyingBuilding._size = new Vector2Int(_flyingBuilding._size.y, _flyingBuilding._size.x);
         _flyingBuilding.transform.Rotate(0, 90, 0);
         StartCoroutine(FindEmployedCells(true));
     }
@@ -115,8 +117,8 @@ public class BuildingsGrid : MonoBehaviour
         int y = Mathf.RoundToInt(worldPosition.z);
         bool available = true;
 
-        if (x < 0 || x > _gridSize.x - _flyingBuilding.Size.x) available = false;
-        if (y < 0 || y > _gridSize.y - _flyingBuilding.Size.y) available = false;
+        if (x < 0 || x > _gridSize.x - _flyingBuilding._size.x) available = false;
+        if (y < 0 || y > _gridSize.y - _flyingBuilding._size.y) available = false;
 
         if (available && IsPlaceTaken(x, y)) available = false;
 
@@ -133,9 +135,9 @@ public class BuildingsGrid : MonoBehaviour
 
     private bool IsPlaceTaken(int placeX, int placeY)
     {
-        for (int x = 0; x < _flyingBuilding.Size.x; x++)
+        for (int x = 0; x < _flyingBuilding._size.x; x++)
         {
-            for (int y = 0; y < _flyingBuilding.Size.y; y++)
+            for (int y = 0; y < _flyingBuilding._size.y; y++)
             {
                 if (_grid[placeX + x, placeY + y] != null) return true;
             }

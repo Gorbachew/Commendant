@@ -4,6 +4,7 @@ using UnityEngine;
 public class Stock : MonoBehaviour
 {
     [SerializeField] private GameObject[] _items;
+    private Building _building;
     private BuildingState _buildingState;
     private ResourcesState _resourcesState;
 
@@ -12,7 +13,7 @@ public class Stock : MonoBehaviour
     private void Awake()
     {
         _buildingState = GetComponent<BuildingState>();
-
+        _building = GetComponent<Building>();
         switch (_buildingState.resources) 
         {
             case "wood":
@@ -38,11 +39,15 @@ public class Stock : MonoBehaviour
 
     public void RenderItems()
     {
-        int filteredItems = CountFilteredItems();
-        for (int i = 0; i < _items.Length; i++)
+        if (gameObject)
         {
-            _items[i].SetActive(i < filteredItems);
+            int filteredItems = CountFilteredItems();
+            for (int i = 0; i < _items.Length; i++)
+            {
+                _items[i].SetActive(i < filteredItems);
+            }
         }
+        
     }
 
     public void AddItems(int id, int count)
@@ -79,4 +84,6 @@ public class Stock : MonoBehaviour
         }
         return filteredList.Count;
     }
+
+    
 }

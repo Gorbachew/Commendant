@@ -49,11 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62df31a80444a4fba6122dc5c051e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainRenderers:
-  - {fileID: 9072378820506794320}
-  - {fileID: 1311913872822962098}
-  - {fileID: 3427341572415005742}
-  Size: {x: 2, y: 2}
+  _size: {x: 1, y: 1}
+  _scaffoldings: []
 --- !u!114 &3705608886019813602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,13 +64,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 0}
-  type: Mill
+  nameTech: Mill
+  nameGame: 
+  resources: 
   isBuild: 0
   isWork: 0
+  isBusy: 0
   id: 0
   hp: 0
   level: 0
-  items: 0
+  buildState: 0
+  buildTime: 0
+  items: 
 --- !u!54 &4680560433023847276
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -386,20 +388,5 @@ PrefabInstance:
 --- !u!4 &5024697513777312379 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 289de37e0299b9e45b2d11363a224e85, type: 3}
-  m_PrefabInstance: {fileID: 4769864755642979728}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &9072378820506794320 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4599977050446818496, guid: 289de37e0299b9e45b2d11363a224e85, type: 3}
-  m_PrefabInstance: {fileID: 4769864755642979728}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &1311913872822962098 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5766063338157265442, guid: 289de37e0299b9e45b2d11363a224e85, type: 3}
-  m_PrefabInstance: {fileID: 4769864755642979728}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &3427341572415005742 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7899784034077176254, guid: 289de37e0299b9e45b2d11363a224e85, type: 3}
   m_PrefabInstance: {fileID: 4769864755642979728}
   m_PrefabAsset: {fileID: 0}

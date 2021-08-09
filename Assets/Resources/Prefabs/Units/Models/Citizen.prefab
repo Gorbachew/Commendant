@@ -2299,6 +2299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7677165217769685924}
   - component: {fileID: 8883816773276455827}
+  - component: {fileID: 4962134071933520253}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -2349,6 +2350,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4962134071933520253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043935187462641950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d8856f9ec525a4785508859fe5a912, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 0}
+  _noStocks: 0
 --- !u!1 &7336811641248645159
 GameObject:
   m_ObjectHideFlags: 0

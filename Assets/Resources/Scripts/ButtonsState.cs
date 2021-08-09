@@ -130,7 +130,7 @@ public class ButtonsState : MonoBehaviour
     private IEnumerator WaitDestroy()
     {
         yield return new WaitForSeconds(0.5f);
-        _resourcesState.FindBuildings("all");
+        _resourcesState.FindStocksBuildings();
         _resourcesState.UpdateResouces("all");
     }
 

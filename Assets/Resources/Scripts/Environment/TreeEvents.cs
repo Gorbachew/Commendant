@@ -15,5 +15,8 @@ public class TreeEvents : MonoBehaviour, IBuilding
         _animator.SetTrigger("Damage");
     }
 
-    
+    public void Build(int count)
+    {
+
+    }
 }

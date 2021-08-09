@@ -17,7 +17,7 @@ public class MainData
         public int id, level, hp;
         public string name;
         public int[] items;
-        public bool isBouild, isWork;
+        public bool isBouild, isWork, isReady;
         public SVec3 pos, rot;
     }
 

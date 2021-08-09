@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class GlobalEvents : MonoBehaviour
+public class SaveManager : MonoBehaviour
 {
     public Transform _unitsFolder, _buildingsFolder;
     public BuildingsGrid _buildingsGrid;
@@ -26,53 +26,75 @@ public class GlobalEvents : MonoBehaviour
 
     private void Loading(MainData data)
     {
-        try
+        
+        UnitsData ud = new UnitsData
         {
-            UnitsData ud = new UnitsData
-            {
-                _units = data._units
-            };
-            BuildingsData bd = new BuildingsData
-            {
-                _builds = data._builds
-            };
+            _units = data._units
+        };
+        BuildingsData bd = new BuildingsData
+        {
+            _builds = data._builds
+        };
 
 
-            for (int i = 0; i < ud._units.Length; i++)
+        for (int i = 0; i < ud._units.Length; i++)
+        {
+            UnitState unit = FindUnits(ud._units[i].id);
+            if (unit)
             {
-                UnitState unit = FindUnits(ud._units[i].id);
-                if (unit)
+                try
                 {
                     unit.GetComponent<Unit>().Enrichment(ud._units[i]);
-                } else
+                }
+                catch (Exception e)
                 {
-                    string name = OperationsHelper.CloneClearing(ud._units[i].type);
-                    GameObject obj = Instantiate(Resources.Load("Prefabs/Units/Citizen"), _unitsFolder) as GameObject;
+                    Debug.LogWarning("Don`t load unit! Error: " + e);
+                }
+
+        } else
+            {
+                GameObject obj = Instantiate(Resources.Load("Prefabs/Units/Citizen"), _unitsFolder) as GameObject;
+                try
+                {
                     obj.GetComponent<Unit>().Enrichment(ud._units[i]);
                 }
-                
+                catch (Exception e)
+                {
+                    Debug.LogWarning("Don`t load unit! Error: " + e);
+                }
             }
+                
+        }
 
-            for (int i = 0; i < bd._builds.Length; i++)
+        for (int i = 0; i < bd._builds.Length; i++)
+        {
+            BuildingState build = FindBuildings(bd._builds[i].id);
+            if (build)
             {
-                BuildingState build = FindBuildings(bd._builds[i].id);
-                if (build)
+                try
                 {
                     build.GetComponent<Building>().Enrichment(bd._builds[i]);
                     continue;
                 }
-                GameObject obj = Instantiate(Resources.Load("Prefabs/Builds/" + bd._builds[i].name), _buildingsFolder) as GameObject;
+                catch (Exception e)
+                {
+                    Debug.LogWarning("Don`t load building! Error: " + e);
+                }
+            }
+            GameObject obj = Instantiate(Resources.Load("Prefabs/Builds/" + bd._builds[i].name), _buildingsFolder) as GameObject;
+            try
+            {
                 obj.GetComponent<Building>().Enrichment(bd._builds[i]);
             }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
+            catch (Exception e)
+            {
+                Debug.LogWarning("Don`t load building! Error: " + e);
+            }
         }
         
+        
+        
     }
-
-    
 
     private UnitState FindUnits(int id)
     {

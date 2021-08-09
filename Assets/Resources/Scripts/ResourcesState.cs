@@ -7,13 +7,13 @@ public class ResourcesState : MonoBehaviour
     [SerializeField] private Transform _buildingsFolder;
     [SerializeField] private Text _foodText, _woodText, _stoneText, _ironText, _toolsText, _WeaponText, _GoldText;
     [SerializeField] private int _foodCount, _woodCount, _stoneCount, _ironCount, _toolsCount, _WeaponCount, _GoldCount;
-    private List<BuildingState> _drovnitsy = new List<BuildingState>();
-
+    [SerializeField] private List<BuildingState> _drovnitsy = new List<BuildingState>();
+    [SerializeField] private List<BuildingState> _stoneStocks = new List<BuildingState>();
 
 
     private void Start()
     {
-        FindBuildings("all");
+        FindStocksBuildings();
         UpdateResouces("all");
     }
     
@@ -27,6 +27,7 @@ public class ResourcesState : MonoBehaviour
                 UpdateWood();
                 break;
             case "stone":
+                UpdateStone();
                 break;
             case "iron":
                 break;
@@ -38,64 +39,59 @@ public class ResourcesState : MonoBehaviour
                 break;
             case "all":
                 UpdateWood();
+                UpdateStone();
                 break;
         }
     }
 
-    public void FindBuildings(string who)
+    public void FindStocksBuildings()
     {
-
-        switch (who)
+        BuildingState[] sArr = _buildingsFolder.GetComponentsInChildren<BuildingState>();
+        _drovnitsy.Clear();
+        _stoneStocks.Clear();
+        foreach (BuildingState s in sArr)
         {
-            case "food":
-                break;
-            case "wood":
-                FindWoodStockBuildings();
-                break;
-            case "stone":
-                break;
-            case "iron":
-                break;
-            case "tools":
-                break;
-            case "weapon":
-                break;
-            case "gold":
-                break;
-            case "all":
-                FindWoodStockBuildings();
-                break;
+
+            switch (s.resources)
+            {
+                case "wood":
+                    _drovnitsy.Add(s);
+                    break;
+                case "stone":
+                    _stoneStocks.Add(s);
+                    break;
+            }
         }
-
-
     }
 
     private void UpdateWood ()
     {
         _woodCount = 0;
-        foreach (BuildingState d in _drovnitsy)
+        foreach (BuildingState item in _drovnitsy)
         {
-            _woodCount += d.items.Count;
+            _woodCount += item.items.Count;
         }
         string maxItems = (_drovnitsy.Count * GlobalConstants.drownitsaMaxItems).ToString();
 
         _woodText.text = _woodCount.ToString() + "/" + maxItems;
     }
 
-
-    
-
-    private void FindWoodStockBuildings()
+    private void UpdateStone()
     {
-        BuildingState[] sArr = _buildingsFolder.GetComponentsInChildren<BuildingState>();
-        _drovnitsy.Clear();
-        foreach (BuildingState s in sArr)
+        _stoneCount = 0;
+        foreach (BuildingState item in _stoneStocks)
         {
-            if (s.resources == "wood")
-            {
-                _drovnitsy.Add(s);
-            }
+            _stoneCount += item.items.Count;
         }
+        string maxItems = (_stoneStocks.Count * GlobalConstants.stoneStockMaxItems).ToString();
+
+        _stoneText.text = _stoneCount.ToString() + "/" + maxItems;
     }
+
+
+
+
+
+
 
 }

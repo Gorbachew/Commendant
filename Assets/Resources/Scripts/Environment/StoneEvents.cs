@@ -2,15 +2,19 @@ using UnityEngine;
 
 public class StoneEvents : MonoBehaviour, IBuilding
 {
-    private Animator _animator;
-
+    private ParticleSystem _particleSystem;
     private void Awake()
     {
-        _animator = GetComponentInChildren<Animator>();
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
     public void Damage(IUnit damager, int count)
     {
-        //_animator.SetTrigger("Damage");
+        _particleSystem.Play();
+    }
+
+    public void Build(int count)
+    {
+        
     }
 }
