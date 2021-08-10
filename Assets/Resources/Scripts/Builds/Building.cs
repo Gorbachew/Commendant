@@ -10,8 +10,6 @@ public class Building : MonoBehaviour
     [SerializeField] private BuildPart[] _buildingParts;
 
     public Vector2Int _size = Vector2Int.one;
-   
-
 
     private void Awake()
     {
@@ -48,10 +46,13 @@ public class Building : MonoBehaviour
         _buildingState.hp = build.hp;
         _buildingState.level = build.level;
         _buildingState.items = build.items.ToList();
+        _buildingState.progress = build.progress;
 
         _buildingState.isBuild = build.isBouild;
         _buildingState.isWork = build.isWork;
         _buildingState.isReady = build.isReady;
+        _buildingState.isProdStart = build.isProdStart;
+        _buildingState.isProdOver = build.isProdOver;
 
         _buildingState.transform.position = new Vector3(
                 build.pos.x,
@@ -77,7 +78,6 @@ public class Building : MonoBehaviour
                 if (_buildingParts.Length > count)
                 {
                     _buildingParts[count].gameObject.SetActive(true);
-                    Debug.Log(gameObject.name + " " + i);
                 }
             } 
         }
@@ -179,9 +179,24 @@ public class Building : MonoBehaviour
             case "WeaponStock":
                 _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textWeaponStockName);
                 break;
+
             case "Chair":
                 _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textChairName);
                 _buildingState.maxHp = GlobalConstants.chairMaxHp;
+                break;
+
+            case "GardenBed":
+                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textGardenBedName);
+                _buildingState.maxHp = GlobalConstants.gardenBedMaxHp;
+                _buildingState.maxProgress = GlobalConstants.gardenBedMP;
+                break;
+            case "Mill":
+                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textMillName);
+                _buildingState.maxHp = GlobalConstants.millMaxHp;
+                break;
+            case "Bakery":
+                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textBakeryName);
+                _buildingState.maxHp = GlobalConstants.bakeryMaxHp;
                 break;
         }
     }

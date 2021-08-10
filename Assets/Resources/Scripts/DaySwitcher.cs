@@ -7,7 +7,7 @@ public class DaySwitcher : MonoBehaviour
     [SerializeField] private Transform _sun;
     [SerializeField] private Text _dayText;
 
-    [SerializeField] private Building[] _buildings;
+    [SerializeField] private IBuilding[] _ibuildings;
     private bool _isRotate;
 
 
@@ -44,12 +44,12 @@ public class DaySwitcher : MonoBehaviour
     {
         GlobalState.isNight = false;
         GlobalState.day++;
-        //_buildings = GameObject.Find("Buildings").GetComponentsInChildren<Building>();
+        _ibuildings = GameObject.Find("Buildings").GetComponentsInChildren<IBuilding>();
 
-        //foreach (Building item in _buildings)
-        //{
-        //    item.NextDay();
-        //}
+        foreach (IBuilding item in _ibuildings)
+        {
+            item.NextDay();
+        }
         SetUI(); 
     }
 

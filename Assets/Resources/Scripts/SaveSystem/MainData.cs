@@ -14,10 +14,10 @@ public class MainData
     [Serializable]
     public struct SBuild
     {
-        public int id, level, hp;
+        public int id, level, hp, progress;
         public string name;
         public int[] items;
-        public bool isBouild, isWork, isReady;
+        public bool isBouild, isWork, isReady, isProdStart, isProdOver;
         public SVec3 pos, rot;
     }
 

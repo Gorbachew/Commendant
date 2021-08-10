@@ -17,4 +17,18 @@ public class StoneEvents : MonoBehaviour, IBuilding
     {
         
     }
+
+    public void Destroy()
+    {
+
+    }
+
+    public void NextDay()
+    {
+    }
+
+    public void Using(IUnit unit)
+    {
+
+    }
 }

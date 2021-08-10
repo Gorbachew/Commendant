@@ -7,6 +7,7 @@ public class Citizen : MonoBehaviour, IUnit
 {
     [SerializeField] private List<BuildingState> _notReadyBuildings;
     [SerializeField] private Transform _target;
+    [SerializeField] private RestBuilding[] _restBuildings;
 
     private UnitState _unitState;
     private NavMeshAgent _navMeshAgent;
@@ -25,6 +26,10 @@ public class Citizen : MonoBehaviour, IUnit
         _unitCollider = _parent.GetComponent<CapsuleCollider>();
 
         _unitState.building = GlobalConstants.citizenBuildingParam;
+
+        //TODO debug
+        _unitState.sp = 30;
+        _unitState.damage = 2;
 
         CalculateLogic();
     }
@@ -45,43 +50,133 @@ public class Citizen : MonoBehaviour, IUnit
     public void CalculateLogic()
     {
 
+        SetNormalState();
         FindTargets();
+        SetTarget();
 
-        if (_target != null)
+        if (_target == null)
         {
-            float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
-            if (dist >= GlobalConstants.stopDistance)
+            _target = _parent.transform;
+        }
+
+        float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
+
+        if (dist >= GlobalConstants.stopDistance)
+        {
+            _coroutine = StartCoroutine(Walk(new SWalk()
             {
-                _coroutine = StartCoroutine(Walk(new SWalk()
-                {
-                    navMeshAgent = _navMeshAgent,
-                    model = transform,
-                    from = _parent,
-                    target = _target,
-                    coordinates = FindRandCoordinates(),
-                    animator = _animator,
-                    anim = "Walk",
-                    unitState = _unitState,
-                    iunit = this,
-                }));
-            } else
+                navMeshAgent = _navMeshAgent,
+                model = transform,
+                from = _parent,
+                target = _target,
+                coordinates = FindRandCoordinates(),
+                animator = _animator,
+                anim = "Walk",
+                unitState = _unitState,
+                iunit = this,
+            }));
+        }
+        else
+        {
+            if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
             {
-                Work();
+                Rest();
+                return;
             }
-        } else
+
+            Work();
+
+        }
+
+
+        //FindTargets();
+
+        //if (_target != null)
+        //{
+        //    float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
+        //    if (dist >= GlobalConstants.stopDistance)
+        //    {
+        //        _coroutine = StartCoroutine(Walk(new SWalk()
+        //        {
+        //            navMeshAgent = _navMeshAgent,
+        //            model = transform,
+        //            from = _parent,
+        //            target = _target,
+        //            coordinates = FindRandCoordinates(),
+        //            animator = _animator,
+        //            anim = "Walk",
+        //            unitState = _unitState,
+        //            iunit = this,
+        //        }));
+        //    } else
+        //    {
+        //        Work();
+        //    }
+        //} else
+        //{
+        //    int rand = Random.Range(0, 2);
+        //    switch (rand)
+        //    {
+        //        case 0:
+        //            SetTarget();
+        //            CalculateLogic();
+        //            break;
+        //        case 1:
+        //            Rest();
+        //            break;
+        //    }
+
+        //}
+    }
+
+
+    private void Rest()
+    {
+        if (_restBuildings.Length > 0)
+        {
+            _coroutine = StartCoroutine(Sit(new SSit()
+            {
+                navMeshAgent = _navMeshAgent,
+                target = _target,
+                animator = _animator,
+                anim = "Sit",
+                unitCollider = _unitCollider,
+                time = GlobalConstants.sitTime,
+                unitState = _unitState,
+                restBuilding = _target.GetComponentInParent<RestBuilding>(),
+                buildingState = _target.GetComponentInParent<BuildingState>(),
+                iunit = this,
+            }));
+        }
+        else
         {
             int rand = Random.Range(0, 2);
             switch (rand)
             {
                 case 0:
-                    SetTarget();
-                    CalculateLogic();
+                    _coroutine = StartCoroutine(Wait(new SWait()
+                    {
+                        animator = _animator,
+                        anim = "Wait",
+                        time = GlobalConstants.waitTime,
+                        unitState = _unitState,
+                        iunit = this,
+                    }));
                     break;
                 case 1:
-                    Rest();
+                    _coroutine = StartCoroutine(Walk(new SWalk()
+                    {
+                        navMeshAgent = _navMeshAgent,
+                        model = transform,
+                        from = _parent,
+                        coordinates = FindRandCoordinates(),
+                        animator = _animator,
+                        anim = "Walk",
+                        unitState = _unitState,
+                        iunit = this,
+                    }));
                     break;
             }
-           
         }
     }
 
@@ -98,42 +193,69 @@ public class Citizen : MonoBehaviour, IUnit
             building = _target.GetComponentInParent<Building>(),
             iunit = this,
         }));
-        _target = null;
     }
 
-    private void Rest()
-    {
-        int rand = Random.Range(0, 2);
-        switch (rand)
-        {
-            case 0:
-                _coroutine = StartCoroutine(Wait(new SWait()
-                {
-                    animator = _animator,
-                    anim = "Wait",
-                    time = GlobalConstants.waitTime,
-                    unitState = _unitState,
-                    iunit = this,
-                }));
-                break;
-            case 1:
-                _coroutine = StartCoroutine(Walk(new SWalk()
-                {
-                    navMeshAgent = _navMeshAgent,
-                    model = transform,
-                    from = _parent,
-                    coordinates = FindRandCoordinates(),
-                    animator = _animator,
-                    anim = "Walk",
-                    unitState = _unitState,
-                    iunit = this,
-                }));
-                break;
-        }
-    }
+
+    //private void Work()
+    //{
+    //    _coroutine = StartCoroutine(Build(new SBuild()
+    //    {
+    //        target = _target,
+    //        animator = _animator,
+    //        anim = "Working",
+    //        time = GlobalConstants.buildsTime,
+    //        unitState = _unitState,
+    //        buildingState = _target.GetComponentInParent<BuildingState>(),
+    //        building = _target.GetComponentInParent<Building>(),
+    //        iunit = this,
+    //    }));
+    //    _target = null;
+    //}
+
+    //private void Rest()
+    //{
+    //    int rand = Random.Range(0, 2);
+    //    switch (rand)
+    //    {
+    //        case 0:
+    //            _coroutine = StartCoroutine(Wait(new SWait()
+    //            {
+    //                animator = _animator,
+    //                anim = "Wait",
+    //                time = GlobalConstants.waitTime,
+    //                unitState = _unitState,
+    //                iunit = this,
+    //            }));
+    //            break;
+    //        case 1:
+    //            _coroutine = StartCoroutine(Walk(new SWalk()
+    //            {
+    //                navMeshAgent = _navMeshAgent,
+    //                model = transform,
+    //                from = _parent,
+    //                coordinates = FindRandCoordinates(),
+    //                animator = _animator,
+    //                anim = "Walk",
+    //                unitState = _unitState,
+    //                iunit = this,
+    //            }));
+    //            break;
+    //    }
+    //}
 
     private void SetTarget()
     {
+
+        if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
+        {
+            _target = FindNearestRestBuilding(new SFindNearestRestBuilding()
+            {
+                restBuildings = _restBuildings,
+                transform = _parent.transform,
+            });
+            return;
+        }
+
         if (_notReadyBuildings.Count > 0)
         {
             _target = FindNearestNotReadyBuilding(new SFindNearestNotReadyBuilding()
@@ -142,6 +264,7 @@ public class Citizen : MonoBehaviour, IUnit
                 transform = transform.parent,
             });
         }
+        
     }
 
     private void FindTargets()
@@ -155,7 +278,7 @@ public class Citizen : MonoBehaviour, IUnit
                 _notReadyBuildings.Add(item);
             }
         }
-
+        _restBuildings = FindRestBuilding();
     }
 
     private void SetNormalState()

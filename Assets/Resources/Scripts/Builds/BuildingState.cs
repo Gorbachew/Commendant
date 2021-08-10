@@ -14,9 +14,13 @@ public class BuildingState : MonoBehaviour
     public bool isBusy;
     public bool isReady;
 
+    public bool isProdStart;
+    public bool isProdOver;
+
     public int id;
     public int maxHp, hp;
     public int level;
+    public int progress, maxProgress;
 
     public List<int> items = new List<int>();
 

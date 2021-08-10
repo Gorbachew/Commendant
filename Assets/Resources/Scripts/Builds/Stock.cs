@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stock : MonoBehaviour
+public class Stock : MonoBehaviour, IBuilding
 {
     [SerializeField] private GameObject[] _items;
     private Building _building;
@@ -85,5 +85,25 @@ public class Stock : MonoBehaviour
         return filteredList.Count;
     }
 
-    
+    public void Destroy()
+    {
+    }
+
+    public void Build(int count)
+    {
+    }
+
+    public void Damage(IUnit damager, int count)
+    {
+    }
+
+    public void NextDay()
+    {
+
+    }
+
+    public void Using(IUnit unit)
+    {
+
+    }
 }

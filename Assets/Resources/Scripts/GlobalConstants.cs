@@ -6,14 +6,6 @@ public class GlobalConstants
     public const int placeSizeX = 50;
     public const int placeSizeY = 50;
 
-
-    public const int gardenBedSpeed = 10;
-    public const int gardenBedMaxItems = 1;
-
-    public const int millSpeed = 5;
-    public const int millMaxItems = 10;
-
-
     public const int maxFindDistance = 30;
     public const float stopDistance = 1.5f;
 
@@ -31,7 +23,11 @@ public class GlobalConstants
 
     public const int chairMaxHp = 20;
 
+    public const int gardenBedMaxHp = 40;
+    public const int millMaxHp = 60;
+    public const int bakeryMaxHp = 80;
     //Items Id
+
     public const int woodId = 1;
     public const int stoneId = 2;
     public const int ironId = 3;
@@ -39,6 +35,9 @@ public class GlobalConstants
     public const int toolsId = 5;
     public const int armorId = 6;
     public const int weaponId = 7;
+    public const int hayId = 8;
+    public const int flourId = 9;
+    public const int breadId = 10;
 
     //Added Items
     public const int woodCount = 3;
@@ -47,6 +46,10 @@ public class GlobalConstants
     //MaxItems
     public const int drownitsaMaxItems = 50;
     public const int stoneStockMaxItems = 50;
+
+    public const int gardenBedMaxItems = 12;
+    public const int millMaxItems = 10;
+    public const int bakeryMaxItems = 20;
 
     //TimesWork
     public const int giveTime = 10;
@@ -57,8 +60,15 @@ public class GlobalConstants
     public const int buildsTime = 10;
 
     //Sp Minus
+    public const int buildSpm = 10;
     public const int woodcutSpm = 10;
     public const int mineStoneSpm = 10;
+    public const int extractHaySpm = 5;
+    public const int doFlourSpm = 5;
+    public const int doBread = 5;
+
+    //MaxProgress
+    public const int gardenBedMP = 3;
 
     //Texts
     public const string textDay = "day";
@@ -81,5 +91,10 @@ public class GlobalConstants
 
     public const string textTreeName = "name_tree";
     public const string textStoneName = "name_stone";
+
     public const string textChairName = "name_chair";
+
+    public const string textGardenBedName = "name_garden_bed";
+    public const string textMillName = "name_mill";
+    public const string textBakeryName = "name_bakery";
 }

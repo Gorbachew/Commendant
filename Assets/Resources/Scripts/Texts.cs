@@ -29,7 +29,11 @@ public class Texts
 
                 GlobalConstants.textChairName => "chair",
 
-                _ => "NoNe",
+                GlobalConstants.textGardenBedName => "garden bed",
+                GlobalConstants.textMillName => "mill",
+                GlobalConstants.textBakeryName => "bakery",
+
+                _ => "N\\A",
             },
             "ru" => name switch
             {
@@ -55,7 +59,11 @@ public class Texts
                 GlobalConstants.textStoneName => "камню",
 
                 GlobalConstants.textChairName => "стулу",
-                _ => "NoNe",
+
+                GlobalConstants.textGardenBedName => "грядке",
+                GlobalConstants.textMillName => "мельнице",
+                GlobalConstants.textBakeryName => "пекарне",
+                _ => "N\\A",
             },
             _ => "N\\A",
         };

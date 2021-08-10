@@ -20,10 +20,13 @@ public class BuildingsData
             _builds[i].hp = build[i].hp;
             _builds[i].level = build[i].level;
             _builds[i].items = build[i].items.ToArray();
+            _builds[i].progress = build[i].progress;
 
             _builds[i].isBouild = build[i].isBuild;
             _builds[i].isWork = build[i].isWork;
             _builds[i].isReady = build[i].isReady;
+            _builds[i].isProdStart = build[i].isProdStart;
+            _builds[i].isProdOver = build[i].isProdOver;
 
             _builds[i].pos = new SVec3(
                 build[i].transform.position.x,

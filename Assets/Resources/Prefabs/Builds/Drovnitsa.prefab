@@ -584,7 +584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scaffoldings: []
   _buildingParts: []
-  _size: {x: 1, y: 1}
+  _size: {x: 1, y: 2}
 --- !u!114 &749643852429992061
 MonoBehaviour:
   m_ObjectHideFlags: 0

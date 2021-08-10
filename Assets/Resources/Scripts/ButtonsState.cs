@@ -122,6 +122,7 @@ public class ButtonsState : MonoBehaviour
 
     private void DestroyBuilding(GameObject obj)
     {
+        obj.GetComponent<IBuilding>().Destroy();
         Destroy(obj);
         RollUpCategory();
         StartCoroutine(WaitDestroy());
@@ -141,7 +142,7 @@ public class ButtonsState : MonoBehaviour
             _btnRollUp.gameObject.SetActive(to.y == 0);
             while (category.offsetMin != to)
             {
-                category.offsetMin = Vector3.MoveTowards(category.offsetMin, to, 6f);
+                category.offsetMin = Vector3.MoveTowards(category.offsetMin, to, 25f);
                 yield return null;
             }
             _categories.gameObject.SetActive(to.y == -300);
@@ -153,7 +154,7 @@ public class ButtonsState : MonoBehaviour
     {
         while (category.offsetMin != to)
         {
-            category.offsetMin = Vector3.MoveTowards(category.offsetMin, to, 20f);
+            category.offsetMin = Vector3.MoveTowards(category.offsetMin, to, 40f);
             yield return null;
         } 
     }
