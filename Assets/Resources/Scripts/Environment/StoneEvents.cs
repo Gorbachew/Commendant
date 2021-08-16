@@ -1,4 +1,5 @@
 using UnityEngine;
+using static IBuilding;
 
 public class StoneEvents : MonoBehaviour, IBuilding
 {
@@ -27,8 +28,10 @@ public class StoneEvents : MonoBehaviour, IBuilding
     {
     }
 
-    public void Using(IUnit unit)
+    public SBuildingReturndUsing Using(SBuildingUsing sStartUsing)
     {
 
+        return new SBuildingReturndUsing() { };
     }
+
 }

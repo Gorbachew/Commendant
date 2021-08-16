@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnitsEvents;
+using static UnitsActions;
 
 public class Citizen : MonoBehaviour, IUnit
 {
@@ -49,44 +49,51 @@ public class Citizen : MonoBehaviour, IUnit
 
     public void CalculateLogic()
     {
-
-        SetNormalState();
-        FindTargets();
-        SetTarget();
-
-        if (_target == null)
+        StartCoroutine(Citizen(new SUnitAction()
         {
-            _target = _parent.transform;
-        }
+            iunit = this,
+            unitState = _unitState,
+            model = transform,
+            animator = _animator,
+            navMeshAgent = _navMeshAgent,
+        }));
+        //SetNormalState();
+        //FindTargets();
+        //SetTarget();
 
-        float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
+        //if (_target == null)
+        //{
+        //    _target = _parent.transform;
+        //}
 
-        if (dist >= GlobalConstants.stopDistance)
-        {
-            _coroutine = StartCoroutine(Walk(new SWalk()
-            {
-                navMeshAgent = _navMeshAgent,
-                model = transform,
-                from = _parent,
-                target = _target,
-                coordinates = FindRandCoordinates(),
-                animator = _animator,
-                anim = "Walk",
-                unitState = _unitState,
-                iunit = this,
-            }));
-        }
-        else
-        {
-            if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
-            {
-                Rest();
-                return;
-            }
+        //float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
 
-            Work();
+        //if (dist >= GlobalConstants.stopDistance)
+        //{
+        //    _coroutine = StartCoroutine(Walk(new SWalk()
+        //    {
+        //        navMeshAgent = _navMeshAgent,
+        //        model = transform,
+        //        from = _parent,
+        //        target = _target,
+        //        coordinates = FindRandCoordinates(),
+        //        animator = _animator,
+        //        anim = "Walk",
+        //        unitState = _unitState,
+        //        iunit = this,
+        //    }));
+        //}
+        //else
+        //{
+        //    if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
+        //    {
+        //        Rest();
+        //        return;
+        //    }
 
-        }
+        //    Work();
+
+        //}
 
 
         //FindTargets();
@@ -130,70 +137,70 @@ public class Citizen : MonoBehaviour, IUnit
     }
 
 
-    private void Rest()
-    {
-        if (_restBuildings.Length > 0)
-        {
-            _coroutine = StartCoroutine(Sit(new SSit()
-            {
-                navMeshAgent = _navMeshAgent,
-                target = _target,
-                animator = _animator,
-                anim = "Sit",
-                unitCollider = _unitCollider,
-                time = GlobalConstants.sitTime,
-                unitState = _unitState,
-                restBuilding = _target.GetComponentInParent<RestBuilding>(),
-                buildingState = _target.GetComponentInParent<BuildingState>(),
-                iunit = this,
-            }));
-        }
-        else
-        {
-            int rand = Random.Range(0, 2);
-            switch (rand)
-            {
-                case 0:
-                    _coroutine = StartCoroutine(Wait(new SWait()
-                    {
-                        animator = _animator,
-                        anim = "Wait",
-                        time = GlobalConstants.waitTime,
-                        unitState = _unitState,
-                        iunit = this,
-                    }));
-                    break;
-                case 1:
-                    _coroutine = StartCoroutine(Walk(new SWalk()
-                    {
-                        navMeshAgent = _navMeshAgent,
-                        model = transform,
-                        from = _parent,
-                        coordinates = FindRandCoordinates(),
-                        animator = _animator,
-                        anim = "Walk",
-                        unitState = _unitState,
-                        iunit = this,
-                    }));
-                    break;
-            }
-        }
-    }
+    //private void Rest()
+    //{
+    //    if (_restBuildings.Length > 0)
+    //    {
+    //        _coroutine = StartCoroutine(Sit(new SSit()
+    //        {
+    //            navMeshAgent = _navMeshAgent,
+    //            target = _target,
+    //            animator = _animator,
+    //            anim = "Sit",
+    //            unitCollider = _unitCollider,
+    //            time = GlobalConstants.sitTime,
+    //            unitState = _unitState,
+    //            restBuilding = _target.GetComponentInParent<RestBuilding>(),
+    //            buildingState = _target.GetComponentInParent<BuildingState>(),
+    //            iunit = this,
+    //        }));
+    //    }
+    //    else
+    //    {
+    //        int rand = Random.Range(0, 2);
+    //        switch (rand)
+    //        {
+    //            case 0:
+    //                _coroutine = StartCoroutine(Wait(new SWait()
+    //                {
+    //                    animator = _animator,
+    //                    anim = "Wait",
+    //                    time = GlobalConstants.waitTime,
+    //                    unitState = _unitState,
+    //                    iunit = this,
+    //                }));
+    //                break;
+    //            case 1:
+    //                _coroutine = StartCoroutine(Walk(new SWalk()
+    //                {
+    //                    navMeshAgent = _navMeshAgent,
+    //                    model = transform,
+    //                    from = _parent,
+    //                    coordinates = FindRandCoordinates(),
+    //                    animator = _animator,
+    //                    anim = "Walk",
+    //                    unitState = _unitState,
+    //                    iunit = this,
+    //                }));
+    //                break;
+    //        }
+    //    }
+    //}
 
-    private void Work()
-    {
-        _coroutine = StartCoroutine(Build(new SBuild()
-        {
-            target = _target,
-            animator = _animator,
-            anim = "Working",
-            time = GlobalConstants.buildsTime,
-            unitState = _unitState,
-            buildingState = _target.GetComponentInParent<BuildingState>(),
-            building = _target.GetComponentInParent<Building>(),
-            iunit = this,
-        }));
-    }
+    //private void Work()
+    //{
+    //    _coroutine = StartCoroutine(Build(new SBuild()
+    //    {
+    //        target = _target,
+    //        animator = _animator,
+    //        anim = "Working",
+    //        time = GlobalConstants.buildsTime,
+    //        unitState = _unitState,
+    //        buildingState = _target.GetComponentInParent<BuildingState>(),
+    //        building = _target.GetComponentInParent<Building>(),
+    //        iunit = this,
+    //    }));
+    //}
 
 
     //private void Work()
@@ -243,57 +250,57 @@ public class Citizen : MonoBehaviour, IUnit
     //    }
     //}
 
-    private void SetTarget()
-    {
+    //private void SetTarget()
+    //{
 
-        if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
-        {
-            _target = FindNearestRestBuilding(new SFindNearestRestBuilding()
-            {
-                restBuildings = _restBuildings,
-                transform = _parent.transform,
-            });
-            return;
-        }
+    //    if (_unitState.sp <= 0 || _notReadyBuildings.Count <= 0)
+    //    {
+    //        _target = FindNearestRestBuilding(new SFindNearestRestBuilding()
+    //        {
+    //            restBuildings = _restBuildings,
+    //            transform = _parent.transform,
+    //        });
+    //        return;
+    //    }
 
-        if (_notReadyBuildings.Count > 0)
-        {
-            _target = FindNearestNotReadyBuilding(new SFindNearestNotReadyBuilding()
-            {
-                buildingState = _notReadyBuildings.ToArray(),
-                transform = transform.parent,
-            });
-        }
+    //    if (_notReadyBuildings.Count > 0)
+    //    {
+    //        _target = FindNearestNotReadyBuilding(new SFindNearestNotReadyBuilding()
+    //        {
+    //            buildingState = _notReadyBuildings.ToArray(),
+    //            transform = transform.parent,
+    //        });
+    //    }
         
-    }
+    //}
 
-    private void FindTargets()
-    {
-        BuildingState[] buildings = GameObject.Find("Buildings").GetComponentsInChildren<BuildingState>();
-        _notReadyBuildings.Clear();
-        foreach (BuildingState item in buildings)
-        {
-            if (!item.isReady && !item.isBusy)
-            {
-                _notReadyBuildings.Add(item);
-            }
-        }
-        _restBuildings = FindRestBuilding();
-    }
+    //private void FindTargets()
+    //{
+    //    BuildingState[] buildings = GameObject.Find("Buildings").GetComponentsInChildren<BuildingState>();
+    //    _notReadyBuildings.Clear();
+    //    foreach (BuildingState item in buildings)
+    //    {
+    //        if (!item.isReady && !item.isBusy)
+    //        {
+    //            _notReadyBuildings.Add(item);
+    //        }
+    //    }
+    //    _restBuildings = FindRestBuilding();
+    //}
 
-    private void SetNormalState()
-    {
-        _navMeshAgent.enabled = true;
-        _unitCollider.isTrigger = false;
+    //private void SetNormalState()
+    //{
+    //    _navMeshAgent.enabled = true;
+    //    _unitCollider.isTrigger = false;
 
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-        }
+    //    if (_coroutine != null)
+    //    {
+    //        StopCoroutine(_coroutine);
+    //    }
 
-        foreach (AnimatorControllerParameter parameter in _animator.parameters)
-        {
-            _animator.SetBool(parameter.name, false);
-        }
-    }
+    //    foreach (AnimatorControllerParameter parameter in _animator.parameters)
+    //    {
+    //        _animator.SetBool(parameter.name, false);
+    //    }
+    //}
 }

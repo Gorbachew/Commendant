@@ -1,8 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnitsEvents;
+using static UnitsActions;
 
 public class Peasant : MonoBehaviour, IUnit
 {
@@ -11,7 +11,6 @@ public class Peasant : MonoBehaviour, IUnit
     [SerializeField] private List<BuildingState> _bakerys = new List<BuildingState>();
     [SerializeField] private RestBuilding[] _restBuildings;
     [SerializeField] private Transform _target;
-    [SerializeField] public bool _noStocks;
 
     private UnitState _unitState;
     private NavMeshAgent _navMeshAgent;
@@ -30,7 +29,8 @@ public class Peasant : MonoBehaviour, IUnit
         _animator = GetComponent<Animator>();
         _unitCollider = _parent.GetComponent<CapsuleCollider>();
         //TODO debug
-        _unitState.sp = 30;
+        _unitState.hp = 10;
+        _unitState.sp = 40;
         _unitState.damage = 2;
         CalculateLogic();
     }
@@ -50,48 +50,15 @@ public class Peasant : MonoBehaviour, IUnit
 
     public void CalculateLogic()
     {
-        _noStocks = false;
-
-        SetNormalState();
-        FindTargets();
-        SetTarget();
-
-        if (_target == null)
+        _coroutine = StartCoroutine(Peasant(new SUnitAction()
         {
-            _target = _parent.transform;
-        } else
-        {
-            _target.Find("Model");
-        }
+            iunit = this,
+            unitState = _unitState,
+            model = transform,
+            animator = _animator,
+            navMeshAgent = _navMeshAgent,
+        }));
 
-        float dist = Vector3.Distance(_parent.transform.position, _target.transform.position);
-
-        if (dist >= GlobalConstants.stopDistance)
-        {
-            _coroutine = StartCoroutine(Walk(new SWalk()
-            {
-                navMeshAgent = _navMeshAgent,
-                model = transform,
-                from = _parent,
-                target = _target,
-                coordinates = FindRandCoordinates(),
-                animator = _animator,
-                anim = "Walk",
-                unitState = _unitState,
-                iunit = this,
-            }));
-        }
-        else
-        {
-            if ((_unitState.sp <= 0 && _unitState.items.Count == 0) || _noStocks)
-            {
-                Rest();
-                return;
-            }
-
-            //Work();
-
-        }
     }
 
     private void Rest()
@@ -144,43 +111,6 @@ public class Peasant : MonoBehaviour, IUnit
         }
     }
 
-    private void Work()
-    {
-        float items = _unitState.items.Count;
-        _ibuilding = _target.parent.GetComponent<IBuilding>();
-        if (items <= 0)
-        {
-            _coroutine = StartCoroutine(Extract(new SExtract()
-            {
-                target = _target,
-                unit = _parent,
-                animator = _animator,
-                anim = "Woodcut",
-                time = GlobalConstants.woodcutTime,
-                unitState = _unitState,
-                itemId = GlobalConstants.woodId,
-                itemCount = GlobalConstants.woodCount,
-                spMinus = GlobalConstants.woodcutSpm,
-                buildingState = _target.GetComponentInParent<BuildingState>(),
-                iunit = this,
-            }));
-        }
-        else
-        {
-            _coroutine = StartCoroutine(Give(new SGive()
-            {
-                target = _target,
-                animator = _animator,
-                anim = "Working",
-                time = GlobalConstants.giveTime,
-                unitState = _unitState,
-                stock = _target.parent.GetComponent<Stock>(),
-                buildingState = _target.GetComponentInParent<BuildingState>(),
-                iunit = this,
-            }));
-        }
-    }
-
     private void SetNormalState()
     {
         _navMeshAgent.enabled = true;
@@ -199,14 +129,15 @@ public class Peasant : MonoBehaviour, IUnit
 
     private void SetTarget()
     {
-       if (_gardenBeds.Count > 0)
-        {
-            _target = FindNearestBuilding(new SFindNearestBuilding
-            {
-                buildingStates = _gardenBeds.ToArray(),
-                transform = transform,
-            });
-        }
+       //if (_gardenBeds.Count > 0)
+       // {
+       //     _target = FindNearestBuilding(new SFindNearestBuilding
+       //     {
+       //         buildingStates = _gardenBeds.ToArray(),
+       //         transform = transform,
+       //         check = GlobalConstants.checkProdStart,
+       //     });
+       // }
     }
 
     private void FindTargets()

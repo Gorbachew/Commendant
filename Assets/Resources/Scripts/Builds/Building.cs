@@ -8,6 +8,7 @@ public class Building : MonoBehaviour
     private BuildingState _buildingState;
     [SerializeField] private Scaffolding[] _scaffoldings;
     [SerializeField] private BuildPart[] _buildingParts;
+    [SerializeField] private GameObject[] _items;
 
     public Vector2Int _size = Vector2Int.one;
 
@@ -95,7 +96,6 @@ public class Building : MonoBehaviour
             _buildingState.hp = _buildingState.maxHp;
 
         }
-
         if (_buildingState.hp >= _buildingState.maxHp)
         {
             _buildingState.isReady = true;
@@ -103,9 +103,28 @@ public class Building : MonoBehaviour
         ÑheckBuildingParts();
     }
 
-    public void Damage(IUnit damager, int count)
+    public void IncreaseProgress(int value)
     {
-        _buildingState.hp -= count;
+        if (_buildingState.isProdStart && _buildingState.progress < _buildingState.maxProgress)
+        {
+            _buildingState.progress += value;
+            if (_buildingState.progress == _buildingState.maxProgress)
+            {
+                _buildingState.isProdOver = true;
+            }
+        }
+        else if (_buildingState.progress >= _buildingState.maxProgress)
+        {
+            _buildingState.progress = _buildingState.maxProgress;
+        }
+    }
+    public void RenderItems()
+    {
+        for (int i = 0; i < _items.Length; i++)
+        {
+            _items[i].SetActive(i < _buildingState.progress);
+
+        }
     }
 
     private void SetBbuildingParts(bool value)
@@ -188,15 +207,23 @@ public class Building : MonoBehaviour
             case "GardenBed":
                 _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textGardenBedName);
                 _buildingState.maxHp = GlobalConstants.gardenBedMaxHp;
-                _buildingState.maxProgress = GlobalConstants.gardenBedMP;
+                _buildingState.maxProgress = GlobalConstants.gardenBedMaxProgress;
+                _buildingState.nameTech = GlobalConstants.gardenBed;
+                _buildingState.stopDistance = GlobalConstants.gardenBedStopDistance;
                 break;
             case "Mill":
                 _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textMillName);
                 _buildingState.maxHp = GlobalConstants.millMaxHp;
+                _buildingState.maxProgress = GlobalConstants.millMaxProgress;
+                _buildingState.nameTech = GlobalConstants.mill;
+                _buildingState.stopDistance = GlobalConstants.millStopDistance;
                 break;
             case "Bakery":
                 _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textBakeryName);
                 _buildingState.maxHp = GlobalConstants.bakeryMaxHp;
+                _buildingState.maxProgress = GlobalConstants.bakeryMaxProgress;
+                _buildingState.nameTech = GlobalConstants.bakery;
+                _buildingState.stopDistance = GlobalConstants.bakeryStopDistance;
                 break;
         }
     }

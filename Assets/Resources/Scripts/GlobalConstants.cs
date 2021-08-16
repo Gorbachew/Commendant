@@ -23,11 +23,8 @@ public class GlobalConstants
 
     public const int chairMaxHp = 20;
 
-    public const int gardenBedMaxHp = 40;
-    public const int millMaxHp = 60;
-    public const int bakeryMaxHp = 80;
+    
     //Items Id
-
     public const int woodId = 1;
     public const int stoneId = 2;
     public const int ironId = 3;
@@ -47,28 +44,72 @@ public class GlobalConstants
     public const int drownitsaMaxItems = 50;
     public const int stoneStockMaxItems = 50;
 
-    public const int gardenBedMaxItems = 12;
-    public const int millMaxItems = 10;
-    public const int bakeryMaxItems = 20;
-
     //TimesWork
-    public const int giveTime = 10;
-    public const int woodcutTime = 10;
-    public const int mineStoneTime = 10;
-    public const int sitTime = 10;
-    public const int waitTime = 10;
-    public const int buildsTime = 10;
+    public const int giveTime = 3;
+    public const int woodcutTime = 3;
+    public const int mineStoneTime = 3;
+    public const int sitTime = 3;
+    public const int waitTime = 3;
+    public const int buildsTime = 3;
+    public const int plantSeedTime = 3;
+    public const int harwestTime = 3;
+    public const int makeFlourTime = 3;
+    public const int takeFlourTime = 3;
+    public const int makeBreadTime = 10;
+
 
     //Sp Minus
     public const int buildSpm = 10;
     public const int woodcutSpm = 10;
     public const int mineStoneSpm = 10;
-    public const int extractHaySpm = 5;
-    public const int doFlourSpm = 5;
-    public const int doBread = 5;
+    public const int plantSeedSpm = 5;
+    public const int harwestSpm = 5;
+    public const int makeFlourSpm = 5;
+    public const int makeBreadSpm = 5;
 
-    //MaxProgress
-    public const int gardenBedMP = 3;
+    // Unit Actions
+    public const string plantSeedsAction = "action_plant_seeds";
+    public const string harwestAction = "action_harwest";
+    public const string makeFlourAction = "action_make_flour";
+    public const string takeFlourAction = "action_take_flour";
+    public const string makeBreadAction = "action_make_bread";
+    public const string takeBreadAction = "action_take_bread";
+
+    public const string buildAction = "action_build";
+
+    //Check
+    public const string checkProdStart = "check_prod_start";
+    public const string checkProdOver = "check_prod_over";
+    public const string checkProgress = "check_progress";
+    public const string checkItems = "check_items";
+    public const string checkNotReady = "check_not_ready";
+
+    //Buildings    
+    public const string allBuildings = "all_buildings";
+
+    public const string bakery = "Bakery";
+    public const string textBakeryName = "name_bakery";
+    public const int bakeryMaxHp = 80;
+    public const int bakeryMaxProgress = 15;
+    public const float bakeryStopDistance = 1.5f;
+
+    public const string gardenBed = "GardenBed";
+    public const string textGardenBedName = "name_garden_bed";
+    public const int gardenBedMaxHp = 40;
+    public const int gardenBedMaxProgress = 3;
+    public const float gardenBedStopDistance = 0.5f;
+
+    public const string mill = "Mill";
+    public const string textMillName = "name_mill";
+    public const int millMaxHp = 60;
+    public const int millMaxProgress = 10;
+    public const float millStopDistance = 1.5f;
+
+
+    //Progress value
+    public const int milletHayValue = 1;
+    public const int flourBagValue = 1;
+    public const int makeBreadValue = 3;
 
     //Texts
     public const string textDay = "day";
@@ -80,6 +121,11 @@ public class GlobalConstants
     public const string textStateGive = "state_give";
     public const string textStateWait = "state_wait";
     public const string textStateBuilds = "state_build";
+
+    public const string textGoToStock = "state_go_to_stock";
+    public const string textPlantingSeed = "state_planting_seed";
+    public const string textHarvest = "state_harvest";
+    public const string textMakeBread = "state_make_bread";
 
     public const string textFoodStockName = "name_food_stock";
     public const string textDrovnitsaName = "name_drovnitsa";
@@ -94,7 +140,5 @@ public class GlobalConstants
 
     public const string textChairName = "name_chair";
 
-    public const string textGardenBedName = "name_garden_bed";
-    public const string textMillName = "name_mill";
-    public const string textBakeryName = "name_bakery";
+  
 }

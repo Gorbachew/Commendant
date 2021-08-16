@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static IBuilding;
 
 public class Stock : MonoBehaviour, IBuilding
 {
@@ -14,7 +15,7 @@ public class Stock : MonoBehaviour, IBuilding
     {
         _buildingState = GetComponent<BuildingState>();
         _building = GetComponent<Building>();
-        switch (_buildingState.resources) 
+        switch (_buildingState.resources)
         {
             case "wood":
                 _maxItems = GlobalConstants.drownitsaMaxItems;
@@ -47,7 +48,7 @@ public class Stock : MonoBehaviour, IBuilding
                 _items[i].SetActive(i < filteredItems);
             }
         }
-        
+
     }
 
     public void AddItems(int id, int count)
@@ -102,8 +103,9 @@ public class Stock : MonoBehaviour, IBuilding
 
     }
 
-    public void Using(IUnit unit)
+    public SBuildingReturndUsing Using(SBuildingUsing sStartUsing)
     {
 
+        return new SBuildingReturndUsing() { };
     }
 }

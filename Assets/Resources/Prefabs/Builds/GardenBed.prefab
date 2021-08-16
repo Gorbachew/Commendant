@@ -347,6 +347,7 @@ Transform:
   - {fileID: 1097828415442062317}
   - {fileID: 2997370228577148705}
   - {fileID: 2249452657784235688}
+  - {fileID: 8353722693965392504}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -377,7 +378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03df76bbba921c84a8d642f0833fc5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   nameTech: GardenBed
   nameGame: 
   resources: hay
@@ -393,6 +393,7 @@ MonoBehaviour:
   level: 0
   progress: 0
   maxProgress: 0
+  stopDistance: 0
   items: 
 --- !u!54 &780981902040036590
 Rigidbody:
@@ -453,6 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buildingState: {fileID: 5121013434139917894}
   _hayField: {fileID: 2249452657784235688}
+  _Saplings: {fileID: 8693550554122383554}
 --- !u!1 &5145564524976737510
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,4 +831,87 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1549436023756930462, guid: 907421e1cf4f5794687a8044f92004d0, type: 3}
   m_PrefabInstance: {fileID: 3818421564158323124}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8387070276135832979
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7617870861226702726}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9c661d12ac2e4fb40b77174cf71516c8, type: 2}
+    - target: {fileID: 919132149155446097, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+      propertyPath: m_Name
+      value: Saplings
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+--- !u!1 &8693550554122383554 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+  m_PrefabInstance: {fileID: 8387070276135832979}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8353722693965392504 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3e3e07d0647743a4db3fed5cbebee5d5, type: 3}
+  m_PrefabInstance: {fileID: 8387070276135832979}
   m_PrefabAsset: {fileID: 0}

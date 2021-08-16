@@ -1,4 +1,5 @@
 using UnityEngine;
+using static IBuilding;
 
 public class RestBuilding : MonoBehaviour, IBuilding
 {
@@ -33,8 +34,9 @@ public class RestBuilding : MonoBehaviour, IBuilding
 
     }
 
-    public void Using(IUnit unit)
+    public SBuildingReturndUsing Using(SBuildingUsing sStartUsing)
     {
 
+        return new SBuildingReturndUsing() { };
     }
 }

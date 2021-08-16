@@ -100,7 +100,7 @@ MonoBehaviour:
   model: {fileID: 0}
   id: 2
   type: Citizen
-  hp: 0
+  hp: 1
   sp: 0
   level: 0
   building: 0

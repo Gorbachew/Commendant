@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class BuildingState : MonoBehaviour
 {
-    public GameObject model;
 
     public string nameTech;
     public string nameGame;
@@ -22,10 +21,9 @@ public class BuildingState : MonoBehaviour
     public int level;
     public int progress, maxProgress;
 
+    public float stopDistance;
+
     public List<int> items = new List<int>();
 
-    private void Awake()
-    {
-        model = transform.Find("Model").gameObject;
-    }
+ 
 }

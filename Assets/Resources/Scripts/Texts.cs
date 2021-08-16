@@ -16,6 +16,11 @@ public class Texts
                 GlobalConstants.textStateWait => "Waiting",
                 GlobalConstants.textStateBuilds => "Builds",
 
+                GlobalConstants.textGoToStock => "Carries supplies",
+                GlobalConstants.textPlantingSeed => "Planting seed",
+                GlobalConstants.textHarvest => "Harvesting",
+                GlobalConstants.textMakeBread => "Bakes bread",
+
                 GlobalConstants.textFoodStockName => "canteen",
                 GlobalConstants.textDrovnitsaName => "wood warehouse",
                 GlobalConstants.textStoneStockName => "stone warehouse",
@@ -46,6 +51,11 @@ public class Texts
                 GlobalConstants.textStateGive => "Выкладывает",
                 GlobalConstants.textStateWait => "Ждет",
                 GlobalConstants.textStateBuilds => "Строит",
+
+                GlobalConstants.textGoToStock => "Несет припасы",
+                GlobalConstants.textPlantingSeed => "Сажает семена",
+                GlobalConstants.textHarvest => "Собирает урожай",
+                GlobalConstants.textMakeBread => "Печет хлеб",
 
                 GlobalConstants.textFoodStockName => "столовой",
                 GlobalConstants.textDrovnitsaName => "складу с деревом",
