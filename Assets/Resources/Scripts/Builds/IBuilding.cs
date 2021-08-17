@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 
 public interface IBuilding
 {
@@ -12,12 +13,12 @@ public interface IBuilding
     }
     struct SBuildingReturndUsing
     {
+        public Transform building;
         public int spm;
         public List<int> items;
     }
 
     SBuildingReturndUsing Using(SBuildingUsing sBuildingUsing);
     void Destroy();
-    void Damage(IUnit damager, int count);
     void NextDay();
 }

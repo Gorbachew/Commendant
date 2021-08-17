@@ -14,30 +14,30 @@ public class ResourcesState : MonoBehaviour
     private void Start()
     {
         FindStocksBuildings();
-        UpdateResouces("all");
+        UpdateResouces(GlobalConstants.allRes);
     }
     
-    public void UpdateResouces(string who)
+    public void UpdateResouces(int res)
     {
-        switch (who)
+        switch (res)
         {
-            case "food":
+            case GlobalConstants.breadId:
                 break;
-            case "wood":
+            case GlobalConstants.woodId:
                 UpdateWood();
                 break;
-            case "stone":
+            case GlobalConstants.stoneId:
                 UpdateStone();
                 break;
-            case "iron":
+            case GlobalConstants.ironId:
                 break;
-            case "tools":
+            case GlobalConstants.goldId:
                 break;
-            case "weapon":
+            case GlobalConstants.toolsId:
                 break;
-            case "gold":
+            case GlobalConstants.weaponId:
                 break;
-            case "all":
+            case GlobalConstants.allRes:
                 UpdateWood();
                 UpdateStone();
                 break;
@@ -52,12 +52,12 @@ public class ResourcesState : MonoBehaviour
         foreach (BuildingState s in sArr)
         {
 
-            switch (s.resources)
+            switch (s.resourceId)
             {
-                case "wood":
+                case GlobalConstants.woodId:
                     _drovnitsy.Add(s);
                     break;
-                case "stone":
+                case GlobalConstants.stoneId:
                     _stoneStocks.Add(s);
                     break;
             }
@@ -69,23 +69,23 @@ public class ResourcesState : MonoBehaviour
         _woodCount = 0;
         foreach (BuildingState item in _drovnitsy)
         {
-            _woodCount += item.items.Count;
+            _woodCount += item.progress;
         }
-        string maxItems = (_drovnitsy.Count * GlobalConstants.drownitsaMaxItems).ToString();
+        string maxItems = (_drovnitsy.Count * GlobalConstants.drovnitsaMaxProgress).ToString();
 
         _woodText.text = _woodCount.ToString() + "/" + maxItems;
     }
 
     private void UpdateStone()
     {
-        _stoneCount = 0;
-        foreach (BuildingState item in _stoneStocks)
-        {
-            _stoneCount += item.items.Count;
-        }
-        string maxItems = (_stoneStocks.Count * GlobalConstants.stoneStockMaxItems).ToString();
+        //_stoneCount = 0;
+        //foreach (BuildingState item in _stoneStocks)
+        //{
+        //    _stoneCount += item.items.Count;
+        //}
+        //string maxItems = (_stoneStocks.Count * GlobalConstants.stoneStockMaxItems).ToString();
 
-        _stoneText.text = _stoneCount.ToString() + "/" + maxItems;
+        //_stoneText.text = _stoneCount.ToString() + "/" + maxItems;
     }
 
 

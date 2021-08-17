@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnitsActions;
+using static UnitLogic;
 
 public class Citizen : MonoBehaviour, IUnit
 {
@@ -41,10 +41,7 @@ public class Citizen : MonoBehaviour, IUnit
 
     public void AttackMoment()
     {
-        if (_ibuilding != null)
-        {
-            _ibuilding.Damage(this, _unitState.damage);
-        }
+
     }
 
     public void CalculateLogic()

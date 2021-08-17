@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using static IBuilding;
 
@@ -15,75 +14,60 @@ public class Stock : MonoBehaviour, IBuilding
     {
         _buildingState = GetComponent<BuildingState>();
         _building = GetComponent<Building>();
-        switch (_buildingState.resources)
+        
+        _resourcesState = GameObject.Find("Canvas/Resources").GetComponent<ResourcesState>();
+        switch (_buildingState.name)
         {
-            case "wood":
-                _maxItems = GlobalConstants.drownitsaMaxItems;
+            case GlobalConstants.drovnitsa + "(Clone)":
+                _buildingState.name = GlobalConstants.drovnitsa;
                 _itemId = GlobalConstants.woodId;
+                _buildingState.resourceId = GlobalConstants.woodId;
                 break;
-            case "stone":
-                _maxItems = GlobalConstants.stoneStockMaxItems;
+            case GlobalConstants.stoneStock + "(Clone)":
+                _buildingState.name = GlobalConstants.stoneStock;
                 _itemId = GlobalConstants.stoneId;
+                _buildingState.resourceId = GlobalConstants.stoneId;
                 break;
-        }
-
-        if (_buildingState.resources != null)
-        {
-            _resourcesState = GameObject.Find("Canvas/Resources").GetComponent<ResourcesState>();
         }
     }
 
     private void Start()
     {
-        RenderItems();
+        _building.RenderItems();
+        _buildingState.isProdStart = true;
+        
     }
 
-    public void RenderItems()
+    public SBuildingReturndUsing Using(SBuildingUsing sBuildingUsing)
     {
-        if (gameObject)
+        SBuildingReturndUsing sEndUsing = new SBuildingReturndUsing
         {
-            int filteredItems = CountFilteredItems();
-            for (int i = 0; i < _items.Length; i++)
+            building = transform
+        };
+
+        if (!sBuildingUsing.start)
+        {
+            switch (sBuildingUsing.action)
             {
-                _items[i].SetActive(i < filteredItems);
+                case GlobalConstants.putWoodAction:
+                    _building.IncreaseProgress(GlobalConstants.putWoodValue);
+                    _building.RenderItems();
+                    _resourcesState.UpdateResouces(GlobalConstants.woodId);
+                    sEndUsing = new SBuildingReturndUsing()
+                    {
+                        spm = GlobalConstants.putWoodSpm,
+                    };
+                    break;
+                case GlobalConstants.buildAction:
+                    _building.Build(sBuildingUsing.value);
+                    sEndUsing = new SBuildingReturndUsing()
+                    {
+                        spm = GlobalConstants.buildSpm,
+                    };
+                    break;
             }
         }
-
-    }
-
-    public void AddItems(int id, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            if (_buildingState.items.Count < _maxItems)
-            {
-                _buildingState.items.Add(id);
-            }
-            else if (_buildingState.items.Count > _maxItems)
-            {
-                _buildingState.items.RemoveRange(
-                    _maxItems,
-                    _buildingState.items.Count - _maxItems);
-                break;
-            }
-
-        }
-        RenderItems();
-        _resourcesState.UpdateResouces(_buildingState.resources);
-
-    }
-
-    private int CountFilteredItems()
-    {
-        List<int> filteredList = new List<int>();
-        foreach (int item in _buildingState.items)
-        {
-            if (item == _itemId)
-            {
-                filteredList.Add(_itemId);
-            }
-        }
-        return filteredList.Count;
+        return sEndUsing;
     }
 
     public void Destroy()
@@ -94,18 +78,10 @@ public class Stock : MonoBehaviour, IBuilding
     {
     }
 
-    public void Damage(IUnit damager, int count)
-    {
-    }
-
     public void NextDay()
     {
 
     }
 
-    public SBuildingReturndUsing Using(SBuildingUsing sStartUsing)
-    {
-
-        return new SBuildingReturndUsing() { };
-    }
+  
 }

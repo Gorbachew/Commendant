@@ -8,6 +8,7 @@ public class Bakery : MonoBehaviour, IBuilding
     private Building _building;
     private void Awake()
     {
+        _buildingState.name = GlobalConstants.bakery;
         _building = GetComponent<Building>();
     }
 
@@ -20,6 +21,7 @@ public class Bakery : MonoBehaviour, IBuilding
     public SBuildingReturndUsing Using(SBuildingUsing sBuildingUsing)
     {
         SBuildingReturndUsing sEndUsing = new SBuildingReturndUsing();
+        sEndUsing.building = transform;
 
         if (sBuildingUsing.start)
         {
@@ -31,7 +33,6 @@ public class Bakery : MonoBehaviour, IBuilding
                     break;
             }
         }
-
 
         if (!sBuildingUsing.start)
         {

@@ -3,11 +3,9 @@ using UnityEngine;
 
 public class BuildingState : MonoBehaviour
 {
+    public int resourceId;
 
-    public string nameTech;
-    public string nameGame;
-    public string resources;
-    
+    public bool isDestroy;
     public bool isBuild;
     public bool isWork;
     public bool isBusy;

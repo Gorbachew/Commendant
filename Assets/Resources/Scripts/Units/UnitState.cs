@@ -12,6 +12,8 @@ public class UnitState : MonoBehaviour
     public int building;
     public int damage;
     public string state;
+
+    public Transform target;
     public List<int> items = new List<int>();
 
     private void Awake()

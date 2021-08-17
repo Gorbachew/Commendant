@@ -584,6 +584,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scaffoldings: []
   _buildingParts: []
+  _items:
+  - {fileID: 6322955080284030606}
+  - {fileID: 1801018115289200119}
+  - {fileID: 5118599256137740387}
+  - {fileID: 4229895964189238033}
+  - {fileID: 3375639675129010562}
+  - {fileID: 7689491023546260748}
+  - {fileID: 2289804267164149018}
+  - {fileID: 3207567004160068294}
+  - {fileID: 30595034905714213}
+  - {fileID: 6067825258673791653}
+  - {fileID: 7658025096841202211}
+  - {fileID: 1638126504881817056}
+  - {fileID: 6460954932015332475}
+  - {fileID: 4145433113702392217}
+  - {fileID: 88150559157655607}
+  - {fileID: 7578045757028380762}
+  - {fileID: 595902342872357404}
+  - {fileID: 4323574985460406752}
+  - {fileID: 7056971798232522069}
+  - {fileID: 4141435505081844360}
+  - {fileID: 6333557567806683753}
+  - {fileID: 5982573814314691773}
+  - {fileID: 1760050556099902217}
+  - {fileID: 4014300826868477474}
+  - {fileID: 1261057069586704794}
+  - {fileID: 5673286783559906432}
+  - {fileID: 7120167971676934345}
+  - {fileID: 6303378249701422588}
+  - {fileID: 1067638704059613453}
+  - {fileID: 2441116715254267861}
+  - {fileID: 904890722656368668}
+  - {fileID: 4625733153716670007}
+  - {fileID: 309825816802032495}
+  - {fileID: 259408711073480945}
+  - {fileID: 5439405976045431377}
+  - {fileID: 3596239230600407994}
+  - {fileID: 7213675304357386032}
+  - {fileID: 5359130171164933773}
+  - {fileID: 2919831433338484088}
+  - {fileID: 5539087484198214592}
+  - {fileID: 5504573144945601836}
+  - {fileID: 6243679276635453153}
+  - {fileID: 6016942611526484804}
+  - {fileID: 8539035131699842498}
+  - {fileID: 3795650173749752307}
+  - {fileID: 8696959023403079958}
+  - {fileID: 1407835616066543835}
+  - {fileID: 5928797616515305290}
+  - {fileID: 6572633311440936321}
+  - {fileID: 6837857601220954233}
   _size: {x: 1, y: 2}
 --- !u!114 &749643852429992061
 MonoBehaviour:
@@ -597,18 +648,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03df76bbba921c84a8d642f0833fc5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
-  nameTech: Drovnitsa
-  nameGame: 
   resources: wood
+  isDestroy: 0
   isBuild: 0
   isWork: 0
   isBusy: 0
   isReady: 0
+  isProdStart: 0
+  isProdOver: 0
   id: 0
   maxHp: 0
   hp: 0
   level: 0
+  progress: 0
+  maxProgress: 0
+  stopDistance: 0
   items: 
 --- !u!54 &5161302659350031061
 Rigidbody:

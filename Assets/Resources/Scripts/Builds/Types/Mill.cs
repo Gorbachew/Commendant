@@ -10,6 +10,7 @@ public class Mill : MonoBehaviour, IBuilding
 
     private void Awake()
     {
+        _buildingState.name = GlobalConstants.mill;
         _building = GetComponent<Building>();
         _animator = GetComponentInChildren<Animator>();
     }
@@ -22,7 +23,7 @@ public class Mill : MonoBehaviour, IBuilding
     public SBuildingReturndUsing Using(SBuildingUsing sBuildingUsing)
     {
         SBuildingReturndUsing sEndUsing = new SBuildingReturndUsing();
-
+        sEndUsing.building = transform;
         if (sBuildingUsing.start)
         {
             switch (sBuildingUsing.action)

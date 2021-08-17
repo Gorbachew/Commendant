@@ -246,8 +246,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62df31a80444a4fba6122dc5c051e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _size: {x: 2, y: 2}
   _scaffoldings: []
+  _buildingParts: []
+  _items: []
+  _size: {x: 2, y: 2}
 --- !u!65 &4703402340835093155
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -289,18 +291,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03df76bbba921c84a8d642f0833fc5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 283247020097691207}
-  nameTech: Stone
-  nameGame: 
   resources: 
+  isDestroy: 0
   isBuild: 1
   isWork: 0
   isBusy: 0
+  isReady: 1
+  isProdStart: 0
+  isProdOver: 0
   id: 0
+  maxHp: 0
   hp: 0
   level: 0
-  buildState: 0
-  buildTime: 0
+  progress: 0
+  maxProgress: 0
+  stopDistance: 0
   items: 
 --- !u!208 &7324183881590178073
 NavMeshObstacle:

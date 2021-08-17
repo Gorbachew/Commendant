@@ -2,410 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 using static IBuilding;
+using static UnitLogic;
 
 public class UnitsActions : MonoBehaviour
 {
-    public struct SWalk
-    {
-        public NavMeshAgent navMeshAgent;
-        public Transform model, from, target;
-        public Vector3 coordinates;
-        public string anim;
-        public Animator animator;
-        public UnitState unitState;
-        public IUnit iunit;
-    }
-
-    public struct SExtract
-    {
-        public Transform unit, target;
-        public Animator animator;
-        public string anim;
-        public float time;
-        public UnitState unitState;
-        public int itemId, itemCount, spMinus;
-        public BuildingState buildingState;
-        public IUnit iunit;
-    }
-
-    public struct SGive
-    {
-        public Transform target;
-        public Animator animator;
-        public string anim;
-        public float time;
-        public UnitState unitState;
-        public BuildingState buildingState;
-        public Stock stock;
-        public IUnit iunit;
-    }
-
-    public struct SSit
-    {
-        public NavMeshAgent navMeshAgent;
-        public Transform target;
-        public Animator animator;
-        public string anim;
-        public Collider unitCollider;
-        public float time;
-        public RestBuilding restBuilding;
-        public BuildingState buildingState;
-        public UnitState unitState;
-        public IUnit iunit;
-    }
-
-    public struct SWait
-    {
-        public NavMeshAgent navMeshAgent;
-        public UnitState unitState;
-        public Animator animator;
-        public string anim;
-        public float time;
-        public IUnit iunit;
-    }
-
-    //public struct SBuild
-    //{
-    //    public Transform target;
-    //    public Animator animator;
-    //    public string anim;
-    //    public float time;
-    //    public UnitState unitState;
-    //    public BuildingState buildingState;
-    //    public Building building;
-    //    public IUnit iunit;
-    //}
-
-    public static IEnumerator Walk(SWalk state)
-    {
-        if (state.navMeshAgent.enabled)
-        {
-            float dist = GlobalConstants.maxFindDistance;
-            state.model.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-            state.animator.SetBool(state.anim, true);
-            state.navMeshAgent.isStopped = false;
-            Vector3 oldPos = Vector3.zero;
-            while (dist >= GlobalConstants.stopDistance)
-            {
-                yield return new WaitForSeconds(0.5f);
-                if (state.target)
-                {
-                    if (oldPos != state.target.position)
-                    {
-
-                        oldPos = state.target.position;
-                        state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateGone)
-                        + " " +
-                        state.target.GetComponentInParent<BuildingState>().nameGame;
-
-                        
-                        state.navMeshAgent.SetDestination(state.target.position);
-                    }
-                    dist = Vector3.Distance(state.from.transform.position, state.target.position);
-                }
-                else
-                {
-                    state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateWalking);
-                    dist = Vector3.Distance(state.from.transform.position, state.coordinates);
-                    state.navMeshAgent.SetDestination(state.coordinates);
-                } 
-
-            }
-            state.navMeshAgent.isStopped = true;
-            state.animator.SetBool(state.anim, false);
-            state.iunit.CalculateLogic();
-        }
-    }
-
-    public static IEnumerator Extract(SExtract state)
-    {
-        float time = state.time;
-        state.unitState.transform.LookAt(state.target);
-        state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-        state.animator.SetBool(state.anim, true);
-        state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateExtract);
-        state.buildingState.isBusy = true;
-
-        while (time > 0)
-        {
-            float dist = Vector3.Distance(state.unit.position, state.target.position);
-            if (dist < GlobalConstants.stopDistance)
-            {
-                time--;
-                yield return new WaitForSeconds(1);
-                if (time <= 0)
-                {
-                    for (int i = 0; i < state.itemCount; i++)
-                    {
-                        state.unitState.items.Add(state.itemId);
-                    }
-                    state.unitState.sp -= state.spMinus;
-                    state.buildingState.isBusy = false;
-                    state.iunit.CalculateLogic();
-                }
-            }
-            else
-            {
-                state.iunit.CalculateLogic();
-                yield return null;
-            }
-        }
-
-        
-    }
-
-
-    public static IEnumerator Give(SGive state)
-    {
-        state.unitState.transform.LookAt(state.target);
-        state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-        state.animator.SetBool(state.anim, true);
-        state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateGive);
-        state.buildingState.isBusy = true;
-        yield return new WaitForSeconds(state.time);
-        state.buildingState.isBusy = false;
-        state.animator.SetBool(state.anim, false);
-
-        if (state.unitState.items.Count > 0)
-        {
-            state.stock.AddItems(state.unitState.items[0], state.unitState.items.Count);
-            state.unitState.items.Clear();
-        }
-        
-        state.iunit.CalculateLogic();
-    }
-
-    public static IEnumerator Sit(SSit state)
-    {
-        if (state.buildingState.isBusy)
-        {
-            state.iunit.CalculateLogic();
-
-        } else
-        {
-            Transform obj = state.unitState.transform;
-            state.navMeshAgent.enabled = false;
-            Transform lookTarget = state.target.parent.Find("Target");
-            obj.position = state.target.parent.position;
-            state.unitState.transform.LookAt(lookTarget);
-            state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-            state.unitCollider.isTrigger = true;
-            state.animator.SetBool(state.anim, true);
-            state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateSit);
-            state.restBuilding.BusyBuilding(state.iunit);
-            state.buildingState.isBusy = true;
-            yield return new WaitForSeconds(state.time);
-            state.buildingState.isBusy = false;
-            state.unitCollider.isTrigger = false;
-            state.navMeshAgent.enabled = true;
-            state.animator.SetBool(state.anim, false);
-            state.iunit.CalculateLogic();
-        }
-    }
-
-    public static IEnumerator Wait(SWait state)
-    {
-        state.animator.SetBool(state.anim, true);
-        state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateWait);
-        yield return new WaitForSeconds(state.time);
-        state.animator.SetBool(state.anim, false);
-        state.iunit.CalculateLogic();
-    }
-
-    //public static IEnumerator Build(SBuild state)
-    //{
-    //    state.unitState.transform.LookAt(state.target);
-    //    state.animator.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-    //    state.animator.SetBool(state.anim, true);
-    //    state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textStateBuilds);
-    //    yield return new WaitForSeconds(state.time);
-    //    state.unitState.sp -= GlobalConstants.buildSpm;
-    //    state.animator.SetBool(state.anim, false);
-    //    state.building.Build(state.unitState.building);
-    //    state.iunit.CalculateLogic();
-    //}
-
-    public struct SFindNearestRestBuilding
-    {
-        public RestBuilding[] restBuildings;
-        public Transform transform;
-    }
-
-    public struct SFindNearestDrovnitsa
-    {
-        public RestBuilding[] restBuildings;
-        public Transform transform;
-        public Stock[] stocks;
-        public Woodcutter woodcutter;
-    }
-
-    public struct SFindNearestTree
-    {
-        public TreeEvents[] trees;
-        public Transform transform;
-    }
-
-    public struct SFindNearestStoneStock
-    {
-        public RestBuilding[] restBuildings;
-        public Transform transform;
-        public Stock[] stocks;
-        public Miner miner;
-    }
-
-    public struct SFindNearestStone
-    {
-        public StoneEvents[] stones;
-        public Transform transform;
-    }
-
-    public struct SFindNearestNotReadyBuilding
-    {
-        public BuildingState[] buildingState;
-        public Transform transform;
-    }
-
-    public static Transform FindNearestRestBuilding(SFindNearestRestBuilding state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (RestBuilding item in state.restBuildings)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            BuildingState bs = item.GetComponent<BuildingState>();
-            List<int> items = bs.items;
-            if (dist > newDist)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-        return nearestObj.Find("Model");
-    }
-
-    public static Transform FindNearestDrovnitsa(SFindNearestDrovnitsa state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (Stock item in state.stocks)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            List<int> items = item.GetComponent<BuildingState>().items;
-            if (dist > newDist && items.Count < GlobalConstants.drownitsaMaxItems)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-
-        if (nearestObj == null)
-        {
-            state.woodcutter._noStocks = true;
-            return FindNearestRestBuilding(new SFindNearestRestBuilding()
-            {
-                transform = state.transform,
-                restBuildings = state.restBuildings,
-            });
-        }
-        
-        return nearestObj.Find("Model");
-    }
-
-    public static Transform FindNearestTree(SFindNearestTree state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (TreeEvents item in state.trees)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            if (dist > newDist)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-        return nearestObj.Find("Model");
-    }
-
-    public static RestBuilding[] FindRestBuilding()
-    {
-        RestBuilding[] rbArray = GameObject.Find("Buildings").GetComponentsInChildren<RestBuilding>();
-        List<RestBuilding> rbList = new List<RestBuilding>();
-        foreach (RestBuilding item in rbArray)
-        {
-            BuildingState bs = item.GetComponentInParent<BuildingState>();
-            if (bs.isReady && !bs.isBusy)
-            {
-                rbList.Add(item);
-            }
-        }
-        return rbList.ToArray();
-    }
-
-    public static Transform FindNearestStoneStock(SFindNearestStoneStock state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (Stock item in state.stocks)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            List<int> items = item.GetComponent<BuildingState>().items;
-            if (dist > newDist && items.Count < GlobalConstants.drownitsaMaxItems)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-
-        if (nearestObj == null)
-        {
-            state.miner._noStocks = true;
-            return FindNearestRestBuilding(new SFindNearestRestBuilding()
-            {
-                transform = state.transform,
-                restBuildings = state.restBuildings,
-            });
-        }
-
-        return nearestObj.Find("Model");
-        
-    }
-
-    public static Transform FindNearestStone(SFindNearestStone state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (StoneEvents item in state.stones)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            if (dist > newDist)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-        return nearestObj.Find("Model");
-    }
-
-    public static Transform FindNearestNotReadyBuilding(SFindNearestNotReadyBuilding state)
-    {
-        float dist = GlobalConstants.maxFindDistance;
-        Transform nearestObj = null;
-        foreach (BuildingState item in state.buildingState)
-        {
-            float newDist = Vector3.Distance(state.transform.position, item.transform.position);
-            if (!item.isReady && dist > newDist)
-            {
-                dist = newDist;
-                nearestObj = item.transform;
-            }
-        }
-        return nearestObj.Find("Model");
-    }
-
-
     public static Vector3 FindRandCoordinates()
     {
         return new Vector3(
@@ -415,42 +16,61 @@ public class UnitsActions : MonoBehaviour
             );
     }
 
-    public struct SUnitAction
+    public static IEnumerator Woodcut(SUnitAction state)
     {
-        public IUnit iunit;
-        public UnitState unitState;
-        public Transform model;
-        public Animator animator;
-        public NavMeshAgent navMeshAgent;
-    }
-
-    public static IEnumerator Citizen(SUnitAction state)
-    {
-
-        while (state.unitState.hp > 0)
+        BuildingState[] trees = FindBuildings(GlobalConstants.tree, GlobalConstants.checkFullness, false);
+        BuildingState[] buildingsDrovtisy = FindBuildings(GlobalConstants.drovnitsa, GlobalConstants.checkFullness, false);
+        
+        if (trees.Length > 0 && state.unitState.items.Count <= 0 && state.unitState.sp >= GlobalConstants.woodcutSpm)
         {
-            yield return new WaitForSeconds(1);
-            state.unitState.state = "";
-            if (state.unitState.state == "") yield return Build(state);
+            state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textWoodcut);
+            yield return ComeUpAndDo(new SComeUpAndDo()
+            {
+                SUnitAction = state,
+                animationWalk = "Walk",
+                animationUse = "Woodcut",
+                spMinus = GlobalConstants.woodcutSpm,
+                building = GlobalConstants.tree,
+                checkBuilding = GlobalConstants.checkFullness,
+                action = GlobalConstants.woodcutAction,
+                actionTime = GlobalConstants.woodcutTime,
+            });
+        } else if (buildingsDrovtisy.Length > 0)
+        {
+            state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.text—arriesWood);
+            if (state.unitState.items.Count <= 0)
+            {
+                yield return ComeUpAndDo(new SComeUpAndDo()
+                {
+                    SUnitAction = state,
+                    animationWalk = "Walk",
+                    animationUse = "Working",
+                    spMinus = GlobalConstants.takeWoodSpm,
+                    building = GlobalConstants.tree,
+                    checkBuilding = GlobalConstants.checkEmpty,
+                    action = GlobalConstants.takeWoodAction,
+                    actionTime = GlobalConstants.takeWoodTime,
+                });
+            } else if (state.unitState.items.Count >= 1)
+            {
+                yield return ComeUpAndDo(new SComeUpAndDo()
+                {
+                    SUnitAction = state,
+                    animationWalk = "Walk",
+                    animationUse = "Working",
+                    spMinus = GlobalConstants.putWoodSpm,
+                    building = GlobalConstants.drovnitsa,
+                    checkBuilding = GlobalConstants.checkFullness,
+                    action = GlobalConstants.putWoodAction,
+                    actionTime = GlobalConstants.putWoodTime,
+                });
+            }         
         }
+        
+
+
         yield return null;
     }
-
-
-    public static IEnumerator Peasant (SUnitAction state)
-    {
-       
-        while (state.unitState.hp > 0)
-        {
-            yield return new WaitForSeconds(1);
-            state.unitState.state = "";
-            if (state.unitState.state == "") yield return Harvest(state);
-            if (state.unitState.state == "") yield return MakeBread(state);
-            if (state.unitState.state == "") yield return SowHarvest(state);
-        }
-        yield return null;
-    }
-
     public static IEnumerator Build(SUnitAction state)
     {
         yield return ComeUpAndDo(new SComeUpAndDo()
@@ -466,11 +86,10 @@ public class UnitsActions : MonoBehaviour
             actionTime = GlobalConstants.buildsTime,
         });
     }
-
     public static IEnumerator MakeBread(SUnitAction state)
     {
-        BuildingState[] buildingsBakery = FindBuildings(GlobalConstants.bakery, GlobalConstants.checkProgress, false);
-        BuildingState[] buildingsMill = FindBuildings(GlobalConstants.mill, GlobalConstants.checkItems, false);
+        BuildingState[] buildingsBakery = FindBuildings(GlobalConstants.bakery, GlobalConstants.checkFullness, false);
+        BuildingState[] buildingsMill = FindBuildings(GlobalConstants.mill, GlobalConstants.checkEmpty, false);
         if (buildingsBakery.Length > 0 && buildingsMill.Length > 0)
         {
             state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textMakeBread);
@@ -483,7 +102,7 @@ public class UnitsActions : MonoBehaviour
                     animationUse = "Working",
                     spMinus = 0,
                     building = GlobalConstants.mill,
-                    checkBuilding = GlobalConstants.checkItems,
+                    checkBuilding = GlobalConstants.checkEmpty,
                     action = GlobalConstants.takeFlourAction,
                     actionTime = GlobalConstants.takeFlourTime,
                 });
@@ -498,7 +117,7 @@ public class UnitsActions : MonoBehaviour
                     animationUse = "Working",
                     spMinus = GlobalConstants.makeBreadSpm,
                     building = GlobalConstants.bakery,
-                    checkBuilding = GlobalConstants.checkProgress,
+                    checkBuilding = GlobalConstants.checkFullness,
                     action = GlobalConstants.makeBreadAction,
                     actionTime = GlobalConstants.makeBreadTime,
                 });
@@ -521,11 +140,10 @@ public class UnitsActions : MonoBehaviour
             actionTime = GlobalConstants.plantSeedTime,
         });
     }
-
     public static IEnumerator Harvest(SUnitAction state)
     {
-        BuildingState[] buildingsMill = FindBuildings(GlobalConstants.mill, GlobalConstants.checkProgress, false);
-        BuildingState[] buildingsGardenBed = FindBuildings(GlobalConstants.gardenBed, GlobalConstants.checkItems, false);
+        BuildingState[] buildingsMill = FindBuildings(GlobalConstants.mill, GlobalConstants.checkFullness, false);
+        BuildingState[] buildingsGardenBed = FindBuildings(GlobalConstants.gardenBed, GlobalConstants.checkEmpty, false);
         if (buildingsMill.Length > 0 && buildingsGardenBed.Length > 0)
         {
             state.unitState.state = Texts.get(GlobalState.language, GlobalConstants.textHarvest);
@@ -553,7 +171,7 @@ public class UnitsActions : MonoBehaviour
                     animationUse = "Working",
                     spMinus = GlobalConstants.makeFlourSpm,
                     building = GlobalConstants.mill,
-                    checkBuilding = GlobalConstants.checkProgress,
+                    checkBuilding = GlobalConstants.checkFullness,
                     action = GlobalConstants.makeFlourAction,
                     actionTime = GlobalConstants.makeFlourTime,
                 });
@@ -563,7 +181,6 @@ public class UnitsActions : MonoBehaviour
 
         yield return null;
     }
-
 
     public struct SComeUpAndDo
     {
@@ -579,7 +196,7 @@ public class UnitsActions : MonoBehaviour
         if (buildings.Length > 0 && state.SUnitAction.unitState.sp >= state.spMinus)
         {
             Transform target = FindNearestBuilding(state.SUnitAction.model, buildings);
-            yield return WalkNew(new SWalkNew()
+            yield return Walk(new SWalk()
             {
                 model = state.SUnitAction.model,
                 target = target.Find("Model"),
@@ -615,7 +232,7 @@ public class UnitsActions : MonoBehaviour
         BuildingState[] allBuilding = GameObject.Find("Buildings").GetComponentsInChildren<BuildingState>();
         foreach (BuildingState item in allBuilding)
         {
-            if ((item.nameTech == buildingType || all) && CheckStateBuilding(item, checkState))
+            if ((item.name == buildingType || all) && CheckStateBuilding(item, checkState) )
             {
                 buildings.Add(item);
             }
@@ -642,21 +259,7 @@ public class UnitsActions : MonoBehaviour
         return nearestBuilding;
     }
 
-
-    private static bool CheckStateBuilding(BuildingState buildingState, string action)
-    {
-        return action switch
-        {
-            GlobalConstants.checkProdStart => !buildingState.isProdStart,
-            GlobalConstants.checkProdOver => buildingState.isProdOver && buildingState.items.Count > 0,
-            GlobalConstants.checkProgress => buildingState.progress < buildingState.maxProgress,
-            GlobalConstants.checkItems => buildingState.progress > 0,
-            GlobalConstants.checkNotReady => !buildingState.isReady,
-            _ => true,
-        };
-    }
-
-    public struct SWalkNew
+    public struct SWalk
     {
         public Transform model;
         public Transform target;
@@ -665,7 +268,7 @@ public class UnitsActions : MonoBehaviour
         public NavMeshAgent navMeshAgent;
     }
 
-    private static IEnumerator WalkNew(SWalkNew state)
+    private static IEnumerator Walk(SWalk state)
     {
         float dist = GlobalConstants.maxFindDistance;
         Vector3 oldPos = Vector3.zero;
@@ -702,16 +305,34 @@ public class UnitsActions : MonoBehaviour
         state.model.parent.transform.LookAt(state.target);
         state.animator.SetBool(state.animate, true);
         state.sBuildingUsing.start = true;
-        ibuilding.Using(state.sBuildingUsing);
+        SBuildingReturndUsing sReturnUsing = ibuilding.Using(state.sBuildingUsing);
+        state.unitState.target = sReturnUsing.building;
         yield return new WaitForSeconds(state.time);
         state.sBuildingUsing.start = false;
-        SBuildingReturndUsing sEndUsing = ibuilding.Using(state.sBuildingUsing);
-        state.unitState.sp -= sEndUsing.spm;
-        if (sEndUsing.items != null)
+        sReturnUsing = ibuilding.Using(state.sBuildingUsing);
+        state.unitState.sp -= sReturnUsing.spm;
+        if (state.unitState.sp < 0)
         {
-            state.unitState.items = sEndUsing.items;
+            state.unitState.sp = 0;
+        }
+        if (sReturnUsing.items != null)
+        {
+            state.unitState.items = sReturnUsing.items;
         }
         state.animator.SetBool(state.animate, false);
     }
-
+    private static bool CheckStateBuilding(BuildingState buildingState, string action)
+    {
+        return action switch
+        {
+            GlobalConstants.checkProdStart => !buildingState.isProdStart && !buildingState.isDestroy,
+            GlobalConstants.checkProdOver => buildingState.isProdOver && buildingState.items.Count > 0 && !buildingState.isDestroy,
+            GlobalConstants.checkFullness => buildingState.progress < buildingState.maxProgress && !buildingState.isDestroy,
+            GlobalConstants.checkEmpty => buildingState.progress > 0,
+            GlobalConstants.checkNotReady => !buildingState.isReady && !buildingState.isDestroy,
+            GlobalConstants.checkNotDied => !buildingState.isDestroy,
+            GlobalConstants.checkAll => true,
+            _ => true,
+        };
+    }
 }

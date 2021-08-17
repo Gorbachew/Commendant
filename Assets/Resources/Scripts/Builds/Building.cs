@@ -49,6 +49,7 @@ public class Building : MonoBehaviour
         _buildingState.items = build.items.ToList();
         _buildingState.progress = build.progress;
 
+        _buildingState.isDestroy = build.isDestroy;
         _buildingState.isBuild = build.isBouild;
         _buildingState.isWork = build.isWork;
         _buildingState.isReady = build.isReady;
@@ -118,6 +119,24 @@ public class Building : MonoBehaviour
             _buildingState.progress = _buildingState.maxProgress;
         }
     }
+
+    public void IncreaseHP(IBuilding ibuilding, int value)
+    {
+        if (_buildingState.hp >= 0)
+        {
+            _buildingState.hp -= value;
+            if (_buildingState.hp <= 0)
+            {
+                _buildingState.isDestroy = true;
+                ibuilding.Destroy();
+            }
+        }
+        else if (_buildingState.hp <= 0)
+        {
+            _buildingState.hp = 0;
+        }
+    }
+
     public void RenderItems()
     {
         for (int i = 0; i < _items.Length; i++)
@@ -168,61 +187,54 @@ public class Building : MonoBehaviour
 
     private void SetOptions()
     {
-        switch (_buildingState.nameTech)
+        switch (_buildingState.name)
         {
             case "Tree":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textTreeName);
                 _buildingState.maxHp = GlobalConstants.treeMaxHp;
+                _buildingState.maxProgress = GlobalConstants.treeMaxProgress;
+                _buildingState.stopDistance = GlobalConstants.treeStopDistance;
                 break;
             case "Stone":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textStoneName);
                 _buildingState.maxHp = GlobalConstants.stoneMaxHp;
+                _buildingState.maxProgress = GlobalConstants.stoneMaxProgress;
+                _buildingState.stopDistance = GlobalConstants.gardenBedStopDistance;
                 break;
             case "Drovnitsa":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textDrovnitsaName);
                 _buildingState.maxHp = GlobalConstants.drovnitsaMaxHp;
+                _buildingState.maxProgress = GlobalConstants.drovnitsaMaxProgress;
+                _buildingState.stopDistance = GlobalConstants.drovnitsaStopDistance;
                 break;
             case "StoneStock":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textStoneStockName);
                 _buildingState.maxHp = GlobalConstants.stoneStockMaxHp;
+                _buildingState.maxProgress = GlobalConstants.stoneStockMaxProgress;
+                _buildingState.stopDistance = GlobalConstants.stoneStockStopDistance;
                 break;
             case "IronStock":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textIronStockName);
                 break;
             case "GoldStock":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textGoldStockName);
                 break;
             case "ToolsStock":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textToolsStockName);
                 break;
             case "WeaponStock":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textWeaponStockName);
                 break;
 
             case "Chair":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textChairName);
                 _buildingState.maxHp = GlobalConstants.chairMaxHp;
                 break;
 
             case "GardenBed":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textGardenBedName);
                 _buildingState.maxHp = GlobalConstants.gardenBedMaxHp;
                 _buildingState.maxProgress = GlobalConstants.gardenBedMaxProgress;
-                _buildingState.nameTech = GlobalConstants.gardenBed;
                 _buildingState.stopDistance = GlobalConstants.gardenBedStopDistance;
                 break;
             case "Mill":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textMillName);
                 _buildingState.maxHp = GlobalConstants.millMaxHp;
                 _buildingState.maxProgress = GlobalConstants.millMaxProgress;
-                _buildingState.nameTech = GlobalConstants.mill;
                 _buildingState.stopDistance = GlobalConstants.millStopDistance;
                 break;
             case "Bakery":
-                _buildingState.nameGame = Texts.get(GlobalState.language, GlobalConstants.textBakeryName);
                 _buildingState.maxHp = GlobalConstants.bakeryMaxHp;
                 _buildingState.maxProgress = GlobalConstants.bakeryMaxProgress;
-                _buildingState.nameTech = GlobalConstants.bakery;
                 _buildingState.stopDistance = GlobalConstants.bakeryStopDistance;
                 break;
         }

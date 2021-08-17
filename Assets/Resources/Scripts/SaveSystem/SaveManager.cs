@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    public Transform _unitsFolder, _buildingsFolder;
+    public Transform _unitsFolder, _buildingsFolder, _environmentsFolder;
     public BuildingsGrid _buildingsGrid;
     
     BuildingState[] _buildings;
@@ -20,7 +20,6 @@ public class SaveManager : MonoBehaviour
     {
         _units = _unitsFolder.GetComponentsInChildren<UnitState>();
         _buildings = _buildingsFolder.GetComponentsInChildren<BuildingState>();
-
         SaveSystem.Save(_units, _buildings);
     }
 
@@ -51,7 +50,7 @@ public class SaveManager : MonoBehaviour
                     Debug.LogWarning("Don`t load unit! Error: " + e);
                 }
 
-        } else
+            } else
             {
                 GameObject obj = Instantiate(Resources.Load("Prefabs/Units/Citizen"), _unitsFolder) as GameObject;
                 try
@@ -68,18 +67,20 @@ public class SaveManager : MonoBehaviour
 
         for (int i = 0; i < bd._builds.Length; i++)
         {
+            
             BuildingState build = FindBuildings(bd._builds[i].id);
             if (build)
             {
                 try
                 {
                     build.GetComponent<Building>().Enrichment(bd._builds[i]);
-                    continue;
+                    
                 }
                 catch (Exception e)
                 {
                     Debug.LogWarning("Don`t load building! Error: " + e);
                 }
+                continue;
             }
             GameObject obj = Instantiate(Resources.Load("Prefabs/Builds/" + bd._builds[i].name), _buildingsFolder) as GameObject;
             try
@@ -91,9 +92,6 @@ public class SaveManager : MonoBehaviour
                 Debug.LogWarning("Don`t load building! Error: " + e);
             }
         }
-        
-        
-        
     }
 
     private UnitState FindUnits(int id)

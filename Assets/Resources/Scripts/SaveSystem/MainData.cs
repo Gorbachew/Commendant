@@ -17,7 +17,7 @@ public class MainData
         public int id, level, hp, progress;
         public string name;
         public int[] items;
-        public bool isBouild, isWork, isReady, isProdStart, isProdOver;
+        public bool isDestroy, isBouild, isWork, isReady, isProdStart, isProdOver;
         public SVec3 pos, rot;
     }
 
@@ -39,7 +39,6 @@ public class MainData
     public SUnit[] _units;
 
     public SBuild[] _builds;
-
 
     public MainData(BuildingsData bd, UnitsData ud)
     {

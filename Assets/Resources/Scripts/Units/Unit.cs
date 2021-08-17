@@ -11,6 +11,11 @@ public class Unit : MonoBehaviour
         _unitState = GetComponent<UnitState>();
     }
 
+    private void Start()
+    {
+        name = _unitState.type;
+    }
+
     public void ChangeType(string type)
     {
         Destroy(_unitState.model);

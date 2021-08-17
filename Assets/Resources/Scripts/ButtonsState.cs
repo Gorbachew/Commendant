@@ -132,7 +132,7 @@ public class ButtonsState : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         _resourcesState.FindStocksBuildings();
-        _resourcesState.UpdateResouces("all");
+        _resourcesState.UpdateResouces(GlobalConstants.allRes);
     }
 
     private IEnumerator Transformation(RectTransform category, Vector2 to)

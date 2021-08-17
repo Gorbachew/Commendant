@@ -11,17 +11,20 @@ public class GardenBed : MonoBehaviour, IBuilding
 
     private void Awake()
     {
+        _buildingState.name = GlobalConstants.gardenBed;
         _building = GetComponent<Building>();
     }
 
     private void Start()
     {
-        CheckProgressState();
+        checkFullnessState();
     }
     public SBuildingReturndUsing Using(SBuildingUsing sBuildingUsing)
     {
         SBuildingReturndUsing sEndUsing = new SBuildingReturndUsing();
+        sEndUsing.building = transform;
         _buildingState.isBusy = sBuildingUsing.start;
+
         if (!sBuildingUsing.start)
         {
             switch (sBuildingUsing.action)
@@ -32,7 +35,7 @@ public class GardenBed : MonoBehaviour, IBuilding
                     {
                         spm = GlobalConstants.plantSeedSpm,
                     };
-                    CheckProgressState();
+                    checkFullnessState();
                     break;
                 case GlobalConstants.harwestAction:
                     _buildingState.progress--;
@@ -42,7 +45,7 @@ public class GardenBed : MonoBehaviour, IBuilding
                         _buildingState.isProdStart = false;
                         _buildingState.isProdOver = false;
                     }
-                    CheckProgressState();
+                    checkFullnessState();
                     sEndUsing = new SBuildingReturndUsing()
                     {
                         items = new List<int>(new int[] { _buildingState.items[0] }),
@@ -75,10 +78,10 @@ public class GardenBed : MonoBehaviour, IBuilding
     public void NextDay()
     {
         _building.IncreaseProgress(GlobalConstants.milletHayValue);
-        CheckProgressState();
+        checkFullnessState();
     }
 
-    private void CheckProgressState()
+    private void checkFullnessState()
     {
         _Saplings.SetActive(_buildingState.isProdStart);
         _hayField.transform.rotation = Quaternion.Euler(0, 90, 0);

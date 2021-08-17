@@ -91,7 +91,7 @@ public class BuildingsGrid : MonoBehaviour
         BuildingState bs = _flyingBuilding.GetComponent<BuildingState>();
         bs.id = _maxId;
         _resourcesState.FindStocksBuildings();
-        _resourcesState.UpdateResouces(bs.resources);
+        _resourcesState.UpdateResouces(bs.resourceId);
         _flyingBuilding = null;
     }
     public void RotateFlyingBuilding()

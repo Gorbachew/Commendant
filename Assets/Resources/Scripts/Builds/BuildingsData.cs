@@ -22,6 +22,7 @@ public class BuildingsData
             _builds[i].items = build[i].items.ToArray();
             _builds[i].progress = build[i].progress;
 
+            _builds[i].isDestroy = build[i].isDestroy;
             _builds[i].isBouild = build[i].isBuild;
             _builds[i].isWork = build[i].isWork;
             _builds[i].isReady = build[i].isReady;
